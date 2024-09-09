@@ -48,4 +48,4 @@ template <typename IndexType, typename ALPHA, typename MA>
 
 } // namespace cxxblas
 
-#endif // CXXBLAS_LEVEL1EXTENSIONS_GBSCAL_H
+#endif // CXXBLAS_LEVEL1EXTENSIONS_GBSCAL_H 
