@@ -15,6 +15,8 @@
 
 #include "XArrayList.h"
 #include "DLinkedList.h"
+#include "XArrayListDemo.h"
+#include "DLinkedListDemo.h"
 //#include "SLinkedList.h"
 template<class T>
 using xvector = XArrayList<T>;
