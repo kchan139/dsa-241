@@ -8,6 +8,7 @@ using namespace std;
 int main(int argc, char** argv) {
     cout << "Assignment-1" << endl;
     xlistDemo1();
+    xlistDemo2();
     return 0;
 }
 

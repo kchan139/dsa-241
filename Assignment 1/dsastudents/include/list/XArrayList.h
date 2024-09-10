@@ -244,7 +244,6 @@ void XArrayList<T>::add(T e)
     // TODO
     ensureCapacity(count + 1);
     data[count++] = e;
-
 }
 
 template <class T>
@@ -327,6 +326,16 @@ string XArrayList<T>::toString(string (*item2str)(T &))
      */
 
     // TODO
+    stringstream ss;
+    ss << "[";
+
+    for (int i = 0; i < count; i++)
+    {
+        if (i > 0) ss << ", ";
+        ss << (item2str ? item2str(data[i]) : "NOT DONE YET");
+    }
+    ss << "]";
+    return ss.str();
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -26,10 +26,10 @@ using namespace std;
 class Point{
 private:
     float x, y, z;
-    friend ostream &operator<<( ostream &os, const Point& point);
+    friend ostream &operator<<(ostream &os, const Point& point);
     
 public:
-    Point(float x=0.0f, float y=0.0f, float z=0.0f){
+    Point(float x = 0.0f, float y = 0.0f, float z = 0.0f){
         this->x = x;
         this->y = y;
         this->z = z;

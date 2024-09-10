@@ -34,8 +34,6 @@ void xlistDemo1(){
         int item = 120;
         int foundIdx = iList.indexOf(item);
         cout    << "lookup for " << item  << " found at: " << foundIdx << endl;
-
-        iList.add (100, 13);
     }
     catch(const std::exception& e)
     {
@@ -43,11 +41,19 @@ void xlistDemo1(){
     }
 }
 
-void xlistDemo2(){
+void xlistDemo2()
+{
     XArrayList<Point> alist;
-    alist.add(Point(23.2f, 25.4f));
-    alist.add(Point(24.6f, 23.1f));  
-    alist.println();
+    try
+    {
+        alist.add(Point(23.2f, 25.4f));
+        alist.add(Point(24.6f, 23.1f));
+        alist.println();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 void xlistDemo3(){
