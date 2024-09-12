@@ -311,8 +311,10 @@ template <class T>
 bool XArrayList<T>::contains(T item)
 {
     // TODO
+    return indexOf(item) != -1;
 }
 
+#include <typeinfo>
 template <class T>
 string XArrayList<T>::toString(string (*item2str)(T &))
 {
@@ -332,7 +334,7 @@ string XArrayList<T>::toString(string (*item2str)(T &))
     for (int i = 0; i < count; i++)
     {
         if (i > 0) ss << ", ";
-        ss << (item2str ? item2str(data[i]) : "NOT DONE YET");
+        item2str ? ss << item2str(data[i]) : ss << data[i];
     }
     ss << "]";
     return ss.str();
@@ -363,8 +365,9 @@ void XArrayList<T>::ensureCapacity(int index)
      * In case of memory allocation failure, catches std::bad_alloc.
      */
     // TODO
-    if (index < 0) throw std::out_of_range ("Index cannot be nigative.");
-    
+    if (index < 0) 
+        throw std::out_of_range ("Index cannot be nigative.");
+
     if (index < capacity) return;
 
     int newCapacity = std::max (capacity * 2, index + 1);
