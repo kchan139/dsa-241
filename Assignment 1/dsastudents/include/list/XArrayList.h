@@ -216,7 +216,8 @@ void XArrayList<T>::removeInternalData()
      * Finally, the dynamic array itself is deallocated from memory.
      */
     // TODO
-
+    if (deleteUserData) deleteUserData (this);
+    else delete[] data;
 }
 
 template <class T>
@@ -230,12 +231,19 @@ template <class T>
 XArrayList<T> &XArrayList<T>::operator=(const XArrayList<T> &list)
 {
     // TODO
+    if (this != &list)
+    {
+        removeInternalData();
+        copyFrom(list);
+    }
+    return *this;
 }
 
 template <class T>
 XArrayList<T>::~XArrayList()
 {
     // TODO
+    removeInternalData();
 }
 
 template <class T>
@@ -266,36 +274,60 @@ template <class T>
 T XArrayList<T>::removeAt(int index)
 {
     // TODO
+    checkIndex(index);
+
+    T item = data[index];
+    for (int i = index; i < count - 1; i++)
+        data[i] = data[i+1];
+    count--;
+
+    return item;
 }
 
 template <class T>
 bool XArrayList<T>::removeItem(T item, void (*removeItemData)(T))
 {
     // TODO
+    int idx = indexOf(item);
+
+    if (idx == -1) return false;
+
+    T item2rm = removeAt(idx);
+    if (item2rm) 
+        removeItemData(item2rm);
+
+    return true;
 }
 
 template <class T>
 bool XArrayList<T>::empty()
 {
     // TODO
+    return count == 0;
 }
 
 template <class T>
 int XArrayList<T>::size()
 {
     // TODO
+    return size;
 }
 
 template <class T>
 void XArrayList<T>::clear()
 {
     // TODO
+    removeInternalData();
+    data = new T[capacity];
+    count = 0;
 }
 
 template <class T>
 T &XArrayList<T>::get(int index)
 {
     // TODO
+    checkIndex(index);
+    return data[index];
 }
 
 template <class T>
