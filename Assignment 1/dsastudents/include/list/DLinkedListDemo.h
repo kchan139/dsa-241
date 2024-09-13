@@ -22,7 +22,7 @@ using namespace std;
 
 void dlistDemo1(){
     List<int> dlist;
-    for(int i = 0; i< 20 ; i++)
+    for(int i = 0; i < 10 ; i++)
         dlist.add(i, i*i);
     dlist.println();
     
@@ -118,6 +118,117 @@ void dlistDemo6(){
     item = 999;
     cout << setw(25) << left << "After changing an item: ";
     list.println();
+}
+
+// Unit tests for DLinkedList<int>
+void test_DLinkedList_int() {
+    DLinkedList<int> list;
+
+    // Test add method
+    list.add(1);
+    list.add(2);
+    list.add(3);
+    printTestResult("Add elements", list.size() == 3 && list.get(0) == 1 && list.get(1) == 2 && list.get(2) == 3);
+
+    // Test add at index method
+    list.add(1, 99);
+    printTestResult("Add element at index", list.get(1) == 99 && list.size() == 4);
+
+    // Test removeAt method
+    int removedItem = list.removeAt(1);
+    printTestResult("Remove at index", removedItem == 99 && list.size() == 3 && list.get(1) == 2);
+
+    // Test removeItem method
+    bool removed = list.removeItem(2);
+    printTestResult("Remove item", removed && list.size() == 2 && list.indexOf(2) == -1);
+
+    // Test empty method
+    DLinkedList<int> emptyList;
+    printTestResult("Empty list", emptyList.empty() && !list.empty());
+
+    // Test size method
+    printTestResult("Size method", list.size() == 2);
+
+    // Test clear method
+    list.clear();
+    printTestResult("Clear method", list.size() == 0 && list.empty());
+
+    // Test indexOf and contains methods
+    list.add(5);
+    list.add(10);
+    printTestResult("Index of method", list.indexOf(5) == 0 && list.indexOf(10) == 1);
+    printTestResult("Contains method", list.contains(5) && !list.contains(99));
+
+    // Test exception on invalid get index
+    try {
+        list.get(5);
+        printTestResult("Exception on invalid index", false); // Should not reach this
+    } catch (const std::out_of_range &) {
+        printTestResult("Exception on invalid index", true);
+    }
+
+    // Test iterator
+    list.clear();
+    for (int i = 0; i < 3; ++i) list.add(i);
+    int index = 0;
+    bool iteratorTestPassed = true;
+    for (DLinkedList<int>::Iterator it = list.begin(); it != list.end(); ++it) {
+        if (*it != index++) iteratorTestPassed = false;
+    }
+    printTestResult("Iterator test", iteratorTestPassed);
+
+    // Test assignment operator
+    DLinkedList<int> assignedList;
+    assignedList = list;
+    printTestResult("Assignment operator", assignedList.size() == list.size() && assignedList.get(0) == list.get(0));
+}
+
+// Unit tests for DLinkedList<Point>
+void test_DLinkedList_Point() {
+    DLinkedList<Point> list;
+
+    // Test add method
+    list.add(Point(1.0f, 2.0f));
+    list.add(Point(3.0f, 4.0f));
+    printTestResult("Add Point elements", list.size() == 2 && list.get(0) == Point(1.0f, 2.0f));
+
+    // Test indexOf and contains
+    printTestResult("IndexOf Point", list.indexOf(Point(3.0f, 4.0f)) == 1);
+    printTestResult("Contains Point", list.contains(Point(1.0f, 2.0f)));
+
+    // Test iterator
+    DLinkedList<Point>::Iterator it = list.begin();
+    bool iteratorTestPassed = (*it == Point(1.0f, 2.0f));
+    ++it;
+    iteratorTestPassed = iteratorTestPassed && (*it == Point(3.0f, 4.0f));
+    printTestResult("Iterator test (Point)", iteratorTestPassed);
+
+    // Test clear
+    list.clear();
+    printTestResult("Clear method (Point)", list.size() == 0);
+}
+
+// Unit tests for DLinkedList<Point*>
+void test_DLinkedList_PointPointer() {
+    DLinkedList<Point*> list(&DLinkedList<Point*>::free, &Point::pointEQ);
+
+    Point *p1 = new Point(1.0f, 2.0f);
+    Point *p2 = new Point(3.0f, 4.0f);
+
+    // Test add method
+    list.add(p1);
+    list.add(p2);
+    printTestResult("Add Point* elements", list.size() == 2 && *(list.get(0)) == *p1);
+
+    // Test contains
+    printTestResult("Contains Point*", list.contains(p1) && !list.contains(new Point(5.0f, 6.0f)));
+
+    // Test indexOf
+    printTestResult("IndexOf Point*", list.indexOf(p2) == 1);
+
+    // Test clear with custom delete
+    list.clear();
+    printTestResult("Clear method (Point*)", list.size() == 0);
 }
 
 #endif /* DLINKEDLISTDEMO_H */

@@ -224,7 +224,7 @@ template <class T>
 XArrayList<T>::XArrayList (const XArrayList<T> &list)
 {
     // TODO
-    this->copyFrom (list);
+    copyFrom (list);
 }
 
 template <class T>
@@ -293,7 +293,7 @@ bool XArrayList<T>::removeItem(T item, void (*removeItemData)(T))
     if (idx == -1) return false;
 
     T item2rm = removeAt(idx);
-    if (item2rm) 
+    if (removeItemData)
         removeItemData(item2rm);
 
     return true;
@@ -310,7 +310,7 @@ template <class T>
 int XArrayList<T>::size()
 {
     // TODO
-    return size;
+    return count;
 }
 
 template <class T>
