@@ -119,9 +119,9 @@ public:
 		return BWDIterator(this, true);
 	}
 	BWDIterator bend()
-		{
-			return BWDIterator(this, false);
-		}
+	{
+		return BWDIterator(this, false);
+	}
 
 protected:
 	static bool equals(T &lhs, T &rhs, bool (*itemEqual)(T &, T &))
@@ -230,87 +230,87 @@ public:
 	};
 
 	class BWDIterator 
+	{
+	private:
+		DLinkedList<T> *pList;
+		Node *pNode;
+
+	public:
+		// Constructor for the BWDIterator
+		BWDIterator(DLinkedList<T> *pList = 0, bool begin = true)
 		{
-		private:
-        	DLinkedList<T> *pList;
-        	Node *pNode;
-
-		public:
-			// Constructor for the BWDIterator
-			BWDIterator(DLinkedList<T> *pList = 0, bool begin = true)
+			if (begin)
 			{
-				if (begin)
-				{
-					// Point to the last node before tail if 'begin' is true
-					if (pList != 0)
-						this->pNode = pList->tail->prev;
-					else
-						pNode = 0;
-				}
+				// Point to the last node before tail if 'begin' is true
+				if (pList != 0)
+					this->pNode = pList->tail->prev;
 				else
-				{
-					// Point to the head if 'begin' is false (before first position)
-					if (pList != 0)
-						this->pNode = pList->head;
-					else
-						pNode = 0;
-				}
-				this->pList = pList;
+					pNode = 0;
 			}
-
-			// Method to remove the current element
-			void remove(void (*removeItemData)(T) = 0)
+			else
 			{
-				// Remove the current node from the list
-				pNode->prev->next = pNode->next;
-				pNode->next->prev = pNode->prev;
-				
-				Node *pPrev = pNode->prev; // Move to previous node after removal
-
-				// Call user-defined data removal function if provided
-				if (removeItemData != 0)
-					removeItemData(pNode->data);
-
-				// Delete the node
-				delete pNode;
-
-				// Adjust the iterator to the previous node
-				pNode = pPrev;
-				pList->count -= 1;
+				// Point to the head if 'begin' is false (before first position)
+				if (pList != 0)
+					this->pNode = pList->head;
+				else
+					pNode = 0;
 			}
+			this->pList = pList;
+		}
 
-			BWDIterator &operator=(const BWDIterator &iterator)
-			{
-				this->pNode = iterator.pNode;
-				this->pList = iterator.pList;
-				return *this;
-			}
+		// Method to remove the current element
+		void remove(void (*removeItemData)(T) = 0)
+		{
+			// Remove the current node from the list
+			pNode->prev->next = pNode->next;
+			pNode->next->prev = pNode->prev;
+			
+			Node *pPrev = pNode->prev; // Move to previous node after removal
 
-			// Prefix -- overload for backward iteration
-			BWDIterator &operator--()
-			{
-				pNode = pNode->prev;
-				return *this;
-			}
+			// Call user-defined data removal function if provided
+			if (removeItemData != 0)
+				removeItemData(pNode->data);
 
-			// Postfix -- overload for backward iteration
-			BWDIterator operator--(int)
-			{
-				BWDIterator iterator = *this;
-				--*this;
-				return iterator;
-			}
+			// Delete the node
+			delete pNode;
 
-			T &operator*()
-			{
-				return pNode->data;
-			}
+			// Adjust the iterator to the previous node
+			pNode = pPrev;
+			pList->count -= 1;
+		}
 
-			bool operator!=(const BWDIterator &iterator)
-			{
-				return pNode != iterator.pNode;
-			}
-		};
+		BWDIterator &operator=(const BWDIterator &iterator)
+		{
+			this->pNode = iterator.pNode;
+			this->pList = iterator.pList;
+			return *this;
+		}
+
+		// Prefix -- overload for backward iteration
+		BWDIterator &operator--()
+		{
+			pNode = pNode->prev;
+			return *this;
+		}
+
+		// Postfix -- overload for backward iteration
+		BWDIterator operator--(int)
+		{
+			BWDIterator iterator = *this;
+			--*this;
+			return iterator;
+		}
+
+		T &operator*()
+		{
+			return pNode->data;
+		}
+
+		bool operator!=(const BWDIterator &iterator)
+		{
+			return pNode != iterator.pNode;
+		}
+	};
 };
 //////////////////////////////////////////////////////////////////////
 // Define a shorter name for DLinkedList:
