@@ -260,7 +260,7 @@ void XArrayList<T>::add(int index, T e)
     // TODO
     // checkIndex (index);
     if (index < 0 || index > count)
-        throw std::out_of_range ("Index out of range");
+        throw std::out_of_range ("Index is out of range!");
     ensureCapacity (count + 1);
 
     for (int i = count; i > index; i--)
@@ -385,7 +385,7 @@ void XArrayList<T>::checkIndex(int index)
      */
     // TODO
     if (index < 0 || index >= count)
-        throw std::out_of_range ("Index out of range");
+        throw std::out_of_range ("Index is out of range!");
 }
 template <class T>
 void XArrayList<T>::ensureCapacity(int index)
