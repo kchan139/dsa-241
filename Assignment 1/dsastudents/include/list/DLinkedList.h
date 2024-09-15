@@ -445,9 +445,6 @@ void List<T>::clear()
 {
 	// TODO
 	removeInternalData();
-	this->head->next = this->tail;
-	this->tail->prev = this->head;
-	count = 0;
 }
 
 template <class T>
@@ -551,7 +548,7 @@ void List<T>::copyFrom(const List<T> &list)
 	this->itemEqual = list.itemEqual;
 	this->deleteUserData = list.deleteUserData;
 
-	for (Node * curr = list.head; curr != list.tail; curr = curr->next)
+	for (Node * curr = list.head->next; curr != list.tail; curr = curr->next)
         add (curr->data);
 }
 
@@ -571,6 +568,9 @@ void List<T>::removeInternalData()
 		curr = curr->next;
 		delete tmp;
 	}
+
+	head->next = tail;
+	tail->prev = head;
 	count = 0;
 }
 

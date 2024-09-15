@@ -180,6 +180,8 @@ void test_DLinkedList_int() {
     // Test assignment operator
     DLinkedList<int> assignedList;
     assignedList = list;
+    list.println();
+    assignedList.println();
     printTestResult("Assignment operator", assignedList.size() == list.size() && assignedList.get(0) == list.get(0));
 }
 
