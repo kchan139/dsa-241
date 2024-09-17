@@ -200,7 +200,7 @@ public:
 			pNode->next->prev = pNode->prev;
 			Node *pNext = pNode->prev; // MUST prev, so iterator++ will go to end
 			if (removeItemData != 0)
-					removeItemData(pNode->data);
+				removeItemData(pNode->data);
 			delete pNode;
 			pNode = pNext;
 			pList->count -= 1;
@@ -229,7 +229,7 @@ public:
 		}
 	};
 
-	class BWDIterator 
+	class BWDIterator
 	{
 	private:
 		DLinkedList<T> *pList;
@@ -265,18 +265,18 @@ public:
 			pNode->prev->next = pNode->next;
 			pNode->next->prev = pNode->prev;
 			
-			Node *pPrev = pNode->prev; // Move to previous node after removal
+			Node *pNext = pNode->next; // Move to previous node after removal
 
 			// Call user-defined data removal function if provided
-			if (removeItemData != 0)
+			if (removeItemData)
 				removeItemData(pNode->data);
 
 			// Delete the node
 			delete pNode;
 
 			// Adjust the iterator to the previous node
-			pNode = pPrev;
-			pList->count -= 1;
+			pNode = pNext;
+			pList->count--;
 		}
 
 		BWDIterator &operator=(const BWDIterator &iterator)
