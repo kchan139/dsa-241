@@ -19,8 +19,8 @@ if [ $? -eq 0 ]; then
     echo -e "\033[31m./main test_unit_array nameFunctionUnitTest\033[0m"
     echo
     echo -e "\033[32m\033[1mterminal unit test\033[0m"
-    echo -e "\033[31m./main test_unit_linkeList\033[0m"
-    echo -e "\033[31m./main test_unit_linkeList nameFunctionUnitTest\033[0m"
+    echo -e "\033[31m./main test_unit_linkedList\033[0m"
+    echo -e "\033[31m./main test_unit_linkedList nameFunctionUnitTest\033[0m"
     echo
     echo -e "\033[32m\033[1mterminal auto test\033[0m"
     echo -e "\033[31m./main test_random number_1 number_2\033[0m"
