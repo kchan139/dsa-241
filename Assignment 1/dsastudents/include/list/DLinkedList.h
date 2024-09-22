@@ -323,8 +323,8 @@ using List = DLinkedList<T>;
 //////////////////////////////////////////////////////////////////////
 
 template <class T>
-List<T>::DLinkedList(
-	void (*deleteUserData)(List<T> *),
+DLinkedList<T>::DLinkedList(
+	void (*deleteUserData)(DLinkedList<T> *),
 	bool (*itemEqual)(T &, T &)
 ){
 	// TODO
@@ -338,14 +338,14 @@ List<T>::DLinkedList(
 }
 
 template <class T>
-List<T>::DLinkedList(const List<T> &list)
+DLinkedList<T>::DLinkedList(const DLinkedList<T> &list)
 {
 	// TODO
 	copyFrom (list);
 }
 
 template <class T>
-List<T> &List<T>::operator=(const List<T> &list)
+DLinkedList<T> &DLinkedList<T>::operator=(const DLinkedList<T> &list)
 {
 	// TODO
 	if (this != &list)
@@ -357,7 +357,7 @@ List<T> &List<T>::operator=(const List<T> &list)
 }
 
 template <class T>
-List<T>::~DLinkedList()
+DLinkedList<T>::~DLinkedList()
 {
 	// TODO
 	removeInternalData ();
@@ -366,7 +366,7 @@ List<T>::~DLinkedList()
 }
 
 template <class T>
-void List<T>::add(T e)
+void DLinkedList<T>::add(T e)
 {
 	// TODO
 	Node * newNode         = new Node (e, this->tail, this->tail->prev); // new node points to the tail and points back at the tail prev
@@ -375,7 +375,7 @@ void List<T>::add(T e)
 	count++;
 }
 template <class T>
-void List<T>::add(int index, T e)
+void DLinkedList<T>::add(int index, T e)
 {
 	// TODO
 	if (index < 0 || index > count)
@@ -389,7 +389,7 @@ void List<T>::add(int index, T e)
 }
 
 template <class T>
-typename List<T>::Node *List<T>::getPreviousNodeOf(int index)
+typename DLinkedList<T>::Node *DLinkedList<T>::getPreviousNodeOf(int index)
 {
 	/**
 	 * Returns the node preceding the specified index in the doubly linked list.
@@ -407,7 +407,7 @@ typename List<T>::Node *List<T>::getPreviousNodeOf(int index)
 }
 
 template <class T>
-T List<T>::removeAt(int index)
+T DLinkedList<T>::removeAt(int index)
 {
 	// TODO
 	if (index < 0 || index >= count)
@@ -427,28 +427,28 @@ T List<T>::removeAt(int index)
 }
 
 template <class T>
-bool List<T>::empty()
+bool DLinkedList<T>::empty()
 {
 	// TODO
 	return count == 0;
 }
 
 template <class T>
-int List<T>::size()
+int DLinkedList<T>::size()
 {
 	// TODO
 	return count;
 }
 
 template <class T>
-void List<T>::clear()
+void DLinkedList<T>::clear()
 {
 	// TODO
 	removeInternalData();
 }
 
 template <class T>
-T &List<T>::get(int index)
+T &DLinkedList<T>::get(int index)
 {
 	// TODO
 	if (index < 0 || index >= count)
@@ -459,7 +459,7 @@ T &List<T>::get(int index)
 }
 
 template <class T>
-int List<T>::indexOf(T item)
+int DLinkedList<T>::indexOf(T item)
 {
 	// TODO
 	int idx = 0;
@@ -471,7 +471,7 @@ int List<T>::indexOf(T item)
 }
 
 template <class T>
-bool List<T>::removeItem(T item, void (*removeItemData)(T))
+bool DLinkedList<T>::removeItem(T item, void (*removeItemData)(T))
 {
 	// TODO
 	for (Node * curr = head->next; curr != tail; curr = curr->next)
@@ -492,14 +492,14 @@ bool List<T>::removeItem(T item, void (*removeItemData)(T))
 }
 
 template <class T>
-bool List<T>::contains(T item)
+bool DLinkedList<T>::contains(T item)
 {
 	// TODO
 	return indexOf (item) != -1;
 }
 
 template <class T>
-string List<T>::toString(string (*item2str)(T &))
+string DLinkedList<T>::toString(string (*item2str)(T &))
 {
 	/**
 	 * Converts the list into a string representation, where each element is formatted using a user-provided function.
@@ -532,7 +532,7 @@ string List<T>::toString(string (*item2str)(T &))
 }
 
 template <class T>
-void List<T>::copyFrom(const List<T> &list)
+void DLinkedList<T>::copyFrom(const DLinkedList<T> &list)
 {
 	/**
 	 * Copies the contents of another doubly linked list into this list.
@@ -553,7 +553,7 @@ void List<T>::copyFrom(const List<T> &list)
 }
 
 template <class T>
-void List<T>::removeInternalData()
+void DLinkedList<T>::removeInternalData()
 {
 	/**
 	 * Clears the internal data of the list by deleting all nodes and user-defined data.
