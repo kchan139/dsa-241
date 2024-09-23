@@ -345,7 +345,7 @@ DLinkedList<T>::DLinkedList(const DLinkedList<T> &list)
 }
 
 template <class T>
-DLinkedList<T> &List<T>::operator=(const DLinkedList<T> &list)
+DLinkedList<T> &DLinkedList<T>::operator=(const DLinkedList<T> &list)
 {
 	// TODO
 	if (this != &list)
