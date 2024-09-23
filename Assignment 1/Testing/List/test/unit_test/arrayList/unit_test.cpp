@@ -804,6 +804,7 @@ bool T_ArrayList::array35() {
   output << "]";
 
   //! remove data
+  list.clear();
 
   //! print result
   return printResult(output.str(), expect, name);
