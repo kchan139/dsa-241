@@ -345,7 +345,7 @@ DLinkedList<T>::DLinkedList(const DLinkedList<T> &list)
 }
 
 template <class T>
-DLinkedList<T> &DLinkedList<T>::operator=(const DLinkedList<T> &list)
+DLinkedList<T> &List<T>::operator=(const DLinkedList<T> &list)
 {
 	// TODO
 	if (this != &list)
@@ -481,7 +481,7 @@ bool DLinkedList<T>::removeItem(T item, void (*removeItemData)(T))
 			curr->prev->next = curr->next;
 			curr->next->prev = curr->prev;
 			if (removeItemData)
-					removeItemData (curr->data);
+				removeItemData (curr->data);
 
 			delete curr;
 			count--;
@@ -561,6 +561,9 @@ void DLinkedList<T>::removeInternalData()
 	 * Traverses and deletes each node between the head and tail to release memory.
 	 */
 	// TODO
+	if (deleteUserData)
+		deleteUserData (this);
+
 	Node * curr = head->next;
 	while (curr != tail)
 	{
