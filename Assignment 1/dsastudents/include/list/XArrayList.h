@@ -403,6 +403,7 @@ void XArrayList<T>::ensureCapacity(int index)
 
     if (index < capacity) return;
 
+    if (!capacity) capacity++;
     int newCapacity = capacity * 2;
     try
     {
