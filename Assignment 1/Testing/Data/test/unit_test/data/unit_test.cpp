@@ -305,7 +305,7 @@ bool T_Data::data12() {
   xt::xarray<float> data = {1, 2, 3, 4};
   xt::xarray<string> label = {"one", "two", "three", "four"};
   TensorDataset<double, string> ds(data, label);
-  DataLoader<double, string> loader(&ds, 3, false, false);
+  DataLoader<double, string> loader(&ds, 3, false, true);
   //! expect
   string expect =
       "getData={ 1.,  2.,  3.} { 4.} ; getLabel={  one,   two, three} {four} ";
@@ -334,7 +334,7 @@ bool T_Data::data13() {
   xt::xarray<float> data = {1, 2, 3, 4};
   xt::xarray<string> label = {"one", "two", "three", "four"};
   TensorDataset<double, string> ds(data, label);
-  DataLoader<double, string> loader(&ds, 3, false, true);
+  DataLoader<double, string> loader(&ds, 3, false, false);
   //! expect
   string expect =
       "getData={ 1.,  2.,  3.,  4.} ; getLabel={  one,   two, three,  four} ";
@@ -363,7 +363,7 @@ bool T_Data::data14() {
   xt::xarray<float> data = {1, 2};
   xt::xarray<string> label = {"one", "two"};
   TensorDataset<double, string> ds(data, label);
-  DataLoader<double, string> loader(&ds, 3, false, true);
+  DataLoader<double, string> loader(&ds, 3, false, false);
   //! expect
   string expect = "getData={ 1.,  2.} ; getLabel={one, two} ";
 
@@ -391,7 +391,7 @@ bool T_Data::data15() {
   xt::xarray<float> data = {1};
   xt::xarray<string> label = {"one"};
   TensorDataset<double, string> ds(data, label);
-  DataLoader<double, string> loader(&ds, 3, false, false);
+  DataLoader<double, string> loader(&ds, 3, false, true);
   //! expect
   string expect = "getData={ 1.} ; getLabel={one} ";
 
@@ -418,7 +418,7 @@ bool T_Data::data16() {
   xt::xarray<float> data = {{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}};
   xt::xarray<string> label = {"one", "two", "three"};
   TensorDataset<double, string> ds(data, label);
-  DataLoader<double, string> loader(&ds, 4, false, false);
+  DataLoader<double, string> loader(&ds, 4, false, true);
   //! expect
   string expect =
       "getData={{ 1.,  2.,  3.},\n { 4.,  5.,  6.},\n { 7.,  8.,  9.}} ; "
@@ -447,7 +447,7 @@ bool T_Data::data17() {
   xt::xarray<float> data = {{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}};
   xt::xarray<string> label = {"one", "two", "three"};
   TensorDataset<double, string> ds(data, label);
-  DataLoader<double, string> loader(&ds, 3, false, false);
+  DataLoader<double, string> loader(&ds, 3, false, true);
   //! expect
   string expect =
       "getData={{ 1.,  2.,  3.},\n { 4.,  5.,  6.},\n { 7.,  8.,  9.}} ; "
@@ -476,7 +476,7 @@ bool T_Data::data18() {
   xt::xarray<float> data = {{1., 2., 3.}, {4., 5., 6.}, {7., 8., 9.}};
   xt::xarray<string> label = {"one", "two", "three"};
   TensorDataset<double, string> ds(data, label);
-  DataLoader<double, string> loader(&ds, 2, false, false);
+  DataLoader<double, string> loader(&ds, 2, false, true);
   //! expect
   string expect =
       "getData={{ 1.,  2.,  3.},\n { 4.,  5.,  6.}} {{ 7.,  8.,  9.}} ; "
@@ -507,7 +507,7 @@ bool T_Data::data19() {
   xt::xarray<double> X = xt::random::randn<double>({nsamples, 10});
   xt::xarray<double> T = xt::random::randn<double>({nsamples, 5});
   TensorDataset<double, double> ds(X, T);
-  DataLoader<double, double> loader(&ds, 30, true, false);
+  DataLoader<double, double> loader(&ds, 30, true, true);
   //! expect
   string expect =
       "(30, 10);(30, 5) (30, 10);(30, 5) (30, 10);(30, 5) (10, 10);(10, 5) ";
@@ -532,7 +532,7 @@ bool T_Data::data20() {
   xt::xarray<double> X = xt::random::randn<double>({nsamples, 10, 5});
   xt::xarray<double> T = xt::random::randn<double>({nsamples, 5, 5});
   TensorDataset<double, double> ds(X, T);
-  DataLoader<double, double> loader(&ds, 30, true, false);
+  DataLoader<double, double> loader(&ds, 30, true, true);
   //! expect
   string expect =
       "(30, 10, 5);(30, 5, 5) (30, 10, 5);(30, 5, 5) (30, 10, 5);(30, 5, 5) "
@@ -558,7 +558,7 @@ bool T_Data::data21() {
   xt::xarray<double> X = xt::random::randn<double>({nsamples, 1, 2, 3});
   xt::xarray<double> T = xt::random::randn<double>({nsamples, 1, 2, 3});
   TensorDataset<double, double> ds(X, T);
-  DataLoader<double, double> loader(&ds, 30, true, true);
+  DataLoader<double, double> loader(&ds, 30, true, false);
   //! expect
   string expect =
       "(30, 1, 2, 3);(30, 1, 2, 3) (30, 1, 2, 3);(30, 1, 2, 3) (40, 1, 2, "
@@ -584,7 +584,7 @@ bool T_Data::data22() {
   xt::xarray<double> X = xt::random::randn<double>({nsamples, 1});
   xt::xarray<double> T = xt::random::randn<double>({nsamples, 1});
   TensorDataset<double, double> ds(X, T);
-  DataLoader<double, double> loader(&ds, 30, true, false);
+  DataLoader<double, double> loader(&ds, 30, true, true);
   //! expect
   string expect = "(10, 1) (10, 1)";
 
@@ -608,7 +608,7 @@ bool T_Data::data23() {
   xt::xarray<double> X = xt::random::randn<double>({nsamples, 1});
   xt::xarray<double> T = xt::random::randn<double>({nsamples, 1});
   TensorDataset<double, double> ds(X, T);
-  DataLoader<double, double> loader(&ds, 30, true, false);
+  DataLoader<double, double> loader(&ds, 30, true, true);
   //! expect
   string expect = "(30, 1) (30, 1)";
 
