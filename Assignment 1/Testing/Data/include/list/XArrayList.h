@@ -216,8 +216,9 @@ void XArrayList<T>::removeInternalData()
      * Finally, the dynamic array itself is deallocated from memory.
      */
     // TODO
-    if (deleteUserData) deleteUserData (this);
-    else delete[] data;
+    if (deleteUserData) 
+        deleteUserData (this);
+    delete[] data;
 }
 
 template <class T>
@@ -402,14 +403,15 @@ void XArrayList<T>::ensureCapacity(int index)
 
     if (index < capacity) return;
 
-    int newCapacity = std::max (capacity * 2, index + 1);
+    if (!capacity) capacity++;
+    int newCapacity = capacity * 2;
     try
     {
         T * newData = new T[newCapacity];
         for (int i = 0; i < count; i++)
             newData[i] = data[i];
 
-        delete data;
+        delete[] data;
         data = newData;
         capacity = newCapacity;
     }
