@@ -54,6 +54,8 @@ class T_LinkedList {
     T_LinkedList::registerTest("linkedList34", &T_LinkedList::linkedList34);
     T_LinkedList::registerTest("linkedList35", &T_LinkedList::linkedList35);
     T_LinkedList::registerTest("linkedList36", &T_LinkedList::linkedList36);
+    T_LinkedList::registerTest("linkedList38", &T_LinkedList::linkedList38);
+    T_LinkedList::registerTest("linkedList39", &T_LinkedList::linkedList39);
     // TODO unit new
   }
 
@@ -94,6 +96,8 @@ class T_LinkedList {
   bool linkedList34();
   bool linkedList35();
   bool linkedList36();
+  bool linkedList38();
+  bool linkedList39();
   // TODO unit new
 
  public:

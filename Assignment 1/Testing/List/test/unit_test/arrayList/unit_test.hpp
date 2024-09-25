@@ -52,6 +52,8 @@ class T_ArrayList {
     T_ArrayList::registerTest("array33", &T_ArrayList::array33);
     T_ArrayList::registerTest("array34", &T_ArrayList::array34);
     T_ArrayList::registerTest("array35", &T_ArrayList::array35);
+    T_ArrayList::registerTest("array38", &T_ArrayList::array38);
+    T_ArrayList::registerTest("array40", &T_ArrayList::array40);
     // TODO unit new
   }
 
@@ -91,6 +93,8 @@ class T_ArrayList {
   bool array33();
   bool array34();
   bool array35();
+  bool array38();
+  bool array40();
   // TODO unit new
 
  public:

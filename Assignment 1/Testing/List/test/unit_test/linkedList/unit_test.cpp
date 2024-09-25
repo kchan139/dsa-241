@@ -831,3 +831,53 @@ bool T_LinkedList::linkedList36() {
   //! print result
   return printResult(output.str(), expect, name);
 }
+
+ bool T_LinkedList::linkedList38() {
+  string name = "linkedList38";
+  //! data
+  DLinkedList<Point *> list(&DLinkedList<Point *>::free, &Point::pointEQ);
+  list.add(new Point(23.2f, 25.4f));
+  list.add(new Point(24.6f, 23.1f));
+  list.add(new Point(12.5f, 22.3f));
+  list.clear();
+  list.add(new Point(23.2f, 25.4f));
+  list.add(new Point(24.6f, 23.1f));
+  list.add(new Point(12.5f, 22.3f));
+  
+  //! expect
+  string expect =
+      "[P(12.5, 22.3, 0.0), P(24.6, 23.1, 0.0), P(23.2, 25.4, 0.0)]";
+
+  //! output
+  stringstream output;
+  output << "[";
+  for (auto it = list.bbegin(); it != list.bend(); --it) {
+    if (it != list.bbegin()) output << ", ";
+    output << **it;
+  }
+  output << "]";
+
+  //! remove data
+  list.clear();  // Clear list to avoid memory leaks
+
+  //! print result
+  return printResult(output.str(), expect, name);
+}
+bool T_LinkedList::linkedList39() {
+  string name = "linkedList39";
+  //! data
+  DLinkedList<int> list;
+  list.add(10);
+  list.add(10);
+  list.removeAt(0);
+  list = list;
+
+  //! expect
+  string expect = "[10]\nsize=1\nempty=0";
+
+  //! output
+  string output = list.toString() + "\nsize=" + to_string(list.size()) +
+                  "\nempty=" + to_string(list.empty());
+
+  return printResult(output, expect, name);
+}

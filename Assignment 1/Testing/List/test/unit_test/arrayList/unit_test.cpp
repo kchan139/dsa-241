@@ -809,3 +809,42 @@ bool T_ArrayList::array35() {
   //! print result
   return printResult(output.str(), expect, name);
 }
+
+bool T_ArrayList::array38() {
+  string name = "array38";
+  //! data
+  XArrayList<int> list;
+  list.add(10);
+  list.removeAt(0);
+  list.clear();
+  //! expect
+  string expect = "[]\nsize=0\nempty=1";
+  string output = list.toString() + "\nsize=" + to_string(list.size()) +
+                  "\nempty=" + to_string(list.empty());
+  return printResult(output, expect, name);
+}
+bool T_ArrayList::array40() {
+  string name = "array40";
+  //! data
+  XArrayList<int> list;
+  list.add(0);
+  list.add(1);
+  list.add(2);
+  list.add(3);
+  list.add(4);
+  list.add(5);
+  list.add(6);
+  list.add(7);
+  list.add(8);
+  list.add(9);
+  list.add(10);
+  list = list;
+
+  //! expect
+  string expect = "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nsize=11\nempty=0";
+
+  //! output
+  string output = list.toString() + "\nsize=" + to_string(list.size()) +
+                  "\nempty=" + to_string(list.empty());
+  return printResult(output, expect, name);
+}
