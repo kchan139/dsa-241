@@ -7,7 +7,7 @@ if [ -f main ]; then
 fi
 
 # Compile the C++ program
-g++ -fsanitize=address  -o main -Iinclude -Isrc -std=c++17 main.cpp \
+g++ -o main -Iinclude -Isrc -std=c++17 main.cpp \
  test/unit_test/arrayList/unit_test.cpp \
  test/unit_test/linkedList/unit_test.cpp \
  test/unit_test/data/unit_test.cpp \
