@@ -23,9 +23,7 @@ private:
     xt::xarray<LType> label;
 
 public:
-    DataLabel(xt::xarray<DType> data, xt::xarray<LType> label) : data(data), label(label)
-    {
-    }
+    DataLabel(xt::xarray<DType> data, xt::xarray<LType> label) : data(data), label(label) {}
     xt::xarray<DType> getData() const { return data; }
     xt::xarray<LType> getLabel() const { return label; }
 };
@@ -101,21 +99,28 @@ public:
      */
     DataLabel<DType, LType> getitem(int index)
     {
-        if (index < 0 || index >= static_cast<int>(this->data_shape[0]))
+        if (index < 0 || index >= this->len())
             throw out_of_range("Index is out of range!");
 
-        xt::xarray<DType> data_row = xt::view(this->data, index, xt::all());
-        xt::xarray<LType> label_element = xt::view(this->label, index);
+        xt::xarray<DType> data_row = xt::view(this->data, index);
+        xt::xarray<LType> label_element;
+
+        if (this->label.size() > 0) 
+        {
+            if (this->label.dimension() == 0)
+                label_element = this->label;
+            else
+                label_element = xt::view(this->label, index);
+        }
 
         return DataLabel<DType, LType>(data_row, label_element);
     }
-
 
     xt::svector<unsigned long> get_data_shape()
     {
         /* TODO: your code is here to return data_shape
          */
-
+        
         return this->data_shape;
     }
     xt::svector<unsigned long> get_label_shape()
