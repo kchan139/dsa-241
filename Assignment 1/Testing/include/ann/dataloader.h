@@ -1,15 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/cppFiles/file.h to edit this template
- */
-
-/*
- * File:   dataloader.h
- * Author: ltsach
- *
- * Created on September 2, 2024, 4:01 PM
- */
-
 #ifndef DATALOADER_H
 #define DATALOADER_H
 #include "ann/xtensor_lib.h"
@@ -29,7 +17,6 @@ private:
     bool shuffle;
     bool drop_last;
 
-    /*TODO: add more member variables to support the iteration*/
     xt::xarray<unsigned long> indices;
 
 public:
@@ -38,8 +25,6 @@ public:
                bool shuffle = true,
                bool drop_last = false)
     {
-        /*TODO: Add your code to do the initialization */
-
         this->ptr_dataset = ptr_dataset;
         this->batch_size = batch_size;
         this->shuffle = shuffle;
@@ -47,13 +32,6 @@ public:
         this->indices = xt::arange<unsigned long>(0, ptr_dataset->len());
     }
     virtual ~DataLoader() {}
-
-    /////////////////////////////////////////////////////////////////////////
-    // The section for supporting the iteration and for-each to DataLoader //
-    /// START: Section                                                     //
-    /////////////////////////////////////////////////////////////////////////
-
-    /*TODO: Add your code here to support iteration on batch*/
 
     Iterator begin()
     {
@@ -93,29 +71,38 @@ public:
             return index != other.index;
         }
 
-        auto operator*() const
+        Batch<DType, LType> operator*() const
         {
             xt::xarray<DType> data;
             xt::xarray<LType> label;
 
             size_t end = min(index + loader->batch_size, loader->indices.size());
 
+            // First iteration: initialize data and label
+            bool is_initialized = false;
             for (size_t i = index; i < end; ++i)
             {
                 size_t dataset_index = loader->indices[i];
                 DataLabel<DType, LType> data_label = loader->ptr_dataset->getitem(dataset_index);
-                data = xt::concatenate(xt::xtuple(data, data_label.getData()), 0);
-                label = xt::concatenate(xt::xtuple(label, data_label.getLabel()), 0);
+
+                if (!is_initialized)
+                {
+                    // Initialize data and label with the first batch element
+                    data = data_label.getData();
+                    label = data_label.getLabel();
+                    is_initialized = true;
+                }
+                else
+                {
+                    // Concatenate with the existing data and label
+                    data = xt::concatenate(xt::xtuple(data, data_label.getData()), 0);
+                    label = xt::concatenate(xt::xtuple(label, data_label.getLabel()), 0);
+                }
             }
 
             return Batch<DType, LType>(data, label);
         }
     };
-
-    /////////////////////////////////////////////////////////////////////////
-    // The section for supporting the iteration and for-each to DataLoader //
-    /// END: Section                                                       //
-    /////////////////////////////////////////////////////////////////////////
 };
 
 #endif /* DATALOADER_H */

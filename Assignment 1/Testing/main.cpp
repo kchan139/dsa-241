@@ -94,10 +94,10 @@ void handleTestUnitData(int argc, char *argv[]) {
   T_Data unitTest;
 
   if (argc == 2 || (argc == 3 && std::string(argv[2]) == "all")) {
-    std::cout << "Running all unit tests linked list: ----------\n";
+    std::cout << "Running all unit tests data: ----------\n";
     unitTest.runAllTests();
   } else if (argc == 3) {
-    std::cout << "Running unit test linked list: " << argv[2]
+    std::cout << "Running unit test data: " << argv[2]
               << " ----------\n";
     unitTest.runTest(argv[2]);
   } else {

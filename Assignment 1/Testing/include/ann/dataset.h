@@ -93,7 +93,7 @@ public:
         /* TODO: your code is here to return the dataset's length
          */
 
-        return static_cast<int>(label_shape[0]);
+        return static_cast<int>(this->data_shape[0]);
     }
 
     /* getitem:
@@ -101,11 +101,15 @@ public:
      */
     DataLabel<DType, LType> getitem(int index)
     {
-        /* TODO: your code is here
-         */
+        if (index < 0 || index >= static_cast<int>(this->data_shape[0]))
+            throw out_of_range("Index is out of range!");
 
-        return DataLabel<DType, LType>(this->data(index), this->label(index));
+        xt::xarray<DType> data_row = xt::view(this->data, index, xt::all());
+        xt::xarray<LType> label_element = xt::view(this->label, index);
+
+        return DataLabel<DType, LType>(data_row, label_element);
     }
+
 
     xt::svector<unsigned long> get_data_shape()
     {
