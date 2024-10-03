@@ -114,10 +114,7 @@ public:
                 size_t idx = loader->indices[batch_start + i];
                 auto item = loader->ptr_dataset->getitem(idx);
                 
-                if (data_shape.size() > 1)
-                    xt::view(batch_data, i) = item.getData();
-                else
-                    batch_data(i) = item.getData()(0);
+                xt::view(batch_data, i) = item.getData();
             }
 
             if (!label_shape.empty()) 
@@ -131,10 +128,7 @@ public:
                     size_t idx = loader->indices[batch_start + i];
                     auto item = loader->ptr_dataset->getitem(idx);
                     
-                    if (label_shape.size() > 1)
-                        xt::view(batch_label, i) = item.getLabel();
-                    else
-                        batch_label(i) = item.getLabel()(0);
+                    xt::view(batch_label, i) = item.getLabel();
                 }
             }
 
