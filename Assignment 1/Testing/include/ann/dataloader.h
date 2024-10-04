@@ -29,7 +29,7 @@ private:
     bool shuffle;
     bool drop_last;
 
-    xt::xarray<size_t> indices;
+    xt::xarray<size_t> indexes;
     size_t curr_idx;
     /*TODO: add more member variables to support the iteration*/
 public:
@@ -45,7 +45,15 @@ public:
         if (drop_last)
             dataset_len = (dataset_len / batch_size) * batch_size;
 
-        indices = xt::arange<size_t>(0, dataset_len);
+        
+        indexes = xt::arange<size_t>(0, dataset_len);
+        if (shuffle) 
+        {
+            xt::random::default_engine_type engine(0);
+            xt::random::shuffle(indexes, engine);
+            // std::default_random_engine engine(0);
+            // std::shuffle(indexes.begin(), indexes.end(), engine);
+        }
     }
     virtual ~DataLoader() {}
 
@@ -63,7 +71,7 @@ public:
 
     Iterator end()
     {
-        return Iterator(this, this->indices.size());
+        return Iterator(this, this->indexes.size());
     }
 
     class Iterator
@@ -71,18 +79,18 @@ public:
     private:
         DataLoader *loader;
         size_t index;
-        size_t indices_size;
+        size_t indexes_size;
 
     public:
         Iterator(DataLoader *loader, int index) : loader(loader), index(index) {
-            indices_size = loader->indices.size();
+            indexes_size = loader->indexes.size();
         }
 
         Iterator &operator++()
         {
-            if ((indices_size - index) / loader->batch_size >= 2)
+            if ((indexes_size - index) / loader->batch_size >= 2)
                 index += loader->batch_size;
-            else index = indices_size;
+            else index = indexes_size;
 
             return *this;
         }
@@ -108,8 +116,8 @@ public:
 
         Batch<DType, LType> operator*() const
         {
-            size_t end = (indices_size - index) / loader->batch_size >= 2 ? 
-                index + loader->batch_size : indices_size;
+            size_t end = (indexes_size - index) / loader->batch_size >= 2 ? 
+                index + loader->batch_size : indexes_size;
             size_t get_size = end - index;
 
             xt::svector<size_t> data_shape = loader->ptr_dataset->get_data_shape();
@@ -125,7 +133,7 @@ public:
 
             for (size_t i = index; i < end; i++)
             {
-                DataLabel<DType, LType> data_label = loader->ptr_dataset->getitem(i);
+                auto data_label = loader->ptr_dataset->getitem(loader->indexes(i));
                 xt::view(data, batch_index, xt::all()) = data_label.getData();
                 if (has_label) 
                     xt::view(label, batch_index, xt::all()) = data_label.getLabel();
