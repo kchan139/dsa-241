@@ -70,11 +70,8 @@ public:
     {
         this->data = data;
         this->label = label;
-        this->data_shape = xt::svector<unsigned long>(this->data.shape().begin(), this->data.shape().end());
-        if (this->label.size() > 0)
-            this->label_shape = xt::svector<unsigned long>(this->label.shape().begin(), this->label.shape().end());
-        else
-            this->label_shape = xt::svector<unsigned long>();
+        this->data_shape = xt::svector<unsigned long>(data.shape().begin(), data.shape().end());
+        this->label_shape = xt::svector<unsigned long>(label.shape().begin(), label.shape().end());
     }
 
     int len()
@@ -84,26 +81,20 @@ public:
 
     DataLabel<DType, LType> getitem(int index)
     {
+        /* TODO: your code is here
+         */
         if (index < 0 || index >= this->len())
-            throw std::out_of_range("Index is out of range!");
+            throw out_of_range("Index is out of range!");
 
-        xt::xarray<DType> data_item;
-        xt::xarray<LType> label_item;
-
-        if (this->data.dimension() == 1)
-            data_item = xt::view(this->data, index);
-        else
-            data_item = xt::view(this->data, index, xt::all());
-
-        if (this->label.size() > 0) 
-        {
-            if (this->label.dimension() == 1)
-                label_item = xt::view(this->label, index);
-            else
-                label_item = xt::view(this->label, index, xt::all());
-        }
-
-        return DataLabel<DType, LType>(data_item, label_item);
+        return this->label.dimension() ? 
+            DataLabel<DType, LType>(
+                xt::view(this->data, index, xt::all()), 
+                xt::view(this->label, index, xt::all())
+            ) : 
+            DataLabel<DType, LType>(
+                xt::view(this->data, index, xt::all()), 
+                this->label
+            );
     }
 
     xt::svector<unsigned long> get_data_shape()
