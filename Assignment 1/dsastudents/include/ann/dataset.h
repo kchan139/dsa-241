@@ -19,8 +19,8 @@ template <typename DType, typename LType>
 class DataLabel
 {
 private:
-    xt::xarray<DType> data;
-    xt::xarray<LType> label;
+    xt::xarray<DType> data = xt::empty<DType>({0});
+    xt::xarray<LType> label = xt::empty<LType>({0});
 
 public:
     DataLabel(xt::xarray<DType> data, xt::xarray<LType> label) : data(data), label(label) {}
@@ -32,8 +32,8 @@ template <typename DType, typename LType>
 class Batch
 {
 private:
-    xt::xarray<DType> data;
-    xt::xarray<LType> label;
+    xt::xarray<DType> data = xt::empty<DType>({0});
+    xt::xarray<LType> label = xt::empty<LType>({0});
 
 public:
     Batch(xt::xarray<DType> data, xt::xarray<LType> label) : data(data), label(label) {}
@@ -61,8 +61,8 @@ template <typename DType, typename LType>
 class TensorDataset : public Dataset<DType, LType>
 {
 private:
-    xt::xarray<DType> data;
-    xt::xarray<LType> label;
+    xt::xarray<DType> data = xt::empty<DType>({0});
+    xt::xarray<LType> label = xt::empty<LType>({0});
     xt::svector<unsigned long> data_shape, label_shape;
 
 public:
