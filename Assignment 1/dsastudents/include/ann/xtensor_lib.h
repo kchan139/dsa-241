@@ -1,14 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/cppFiles/file.h to edit this template
- */
-
-/* 
- * File:   xtensor_lib.h
- * Author: ltsach
- *
- * Created on September 2, 2024, 10:39 AM
- */
 
 #ifndef XTENSOR_LIB_H
 #define XTENSOR_LIB_H
