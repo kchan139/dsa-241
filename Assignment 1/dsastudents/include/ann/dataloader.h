@@ -25,26 +25,36 @@ public:
 
 private:
     Dataset<DType, LType> *ptr_dataset;
-    int batch_size;
+    size_t batch_size;
     bool shuffle;
     bool drop_last;
 
+    xt::xarray<size_t> indexes;
+    size_t curr_idx;
     /*TODO: add more member variables to support the iteration*/
-    xt::xarray<unsigned long> indices;
-
 public:
     DataLoader(Dataset<DType, LType> *ptr_dataset,
-               int batch_size,
+               size_t batch_size,
                bool shuffle = true,
                bool drop_last = false)
+    : ptr_dataset(ptr_dataset), batch_size(batch_size), shuffle(shuffle), drop_last(drop_last), curr_idx(0)
     {
         /*TODO: Add your code to do the initialization */
+        size_t dataset_len = ptr_dataset->len();
+        indexes = xt::arange<size_t>(0, dataset_len);
+        
+        if (shuffle) 
+        {
+            xt::random::default_engine_type engine(6);
+            xt::random::shuffle(indexes, engine);
+            // std::default_random_engine engine(0);
+            // std::shuffle(indexes.begin(), indexes.end(), engine);
+        }
 
-        this->ptr_dataset = ptr_dataset;
-        this->batch_size = batch_size;
-        this->shuffle = shuffle;
-        this->drop_last = drop_last;
-        this->indices = xt::arange<unsigned long>(0, ptr_dataset->len());
+        if (drop_last)
+            dataset_len = (dataset_len / batch_size) * batch_size;
+        
+        indexes = xt::view(indexes, xt::range(0, dataset_len));
     }
     virtual ~DataLoader() {}
 
@@ -62,29 +72,41 @@ public:
 
     Iterator end()
     {
-        size_t final_index = drop_last ? (indices.size() / batch_size) * batch_size : indices.size();
-        return Iterator(this, final_index);
+        return Iterator(this, this->indexes.size());
     }
 
     class Iterator
     {
     private:
-        size_t index;
         DataLoader *loader;
+        size_t index;
+        size_t indexes_size;
 
     public:
-        Iterator(DataLoader *loader, size_t index) : loader(loader), index(index) {}
+        Iterator(DataLoader *loader, int index) : loader(loader), index(index) {
+            indexes_size = loader->indexes.size();
+        }
 
         Iterator &operator++()
         {
-            index += loader->batch_size;
+            if ((indexes_size - index) / loader->batch_size >= 2)
+                index += loader->batch_size;
+            else index = indexes_size;
+
+            return *this;
+        }
+
+        Iterator &operator=(const Iterator &iterator)
+        {
+            loader = iterator.loader;
+            index  = iterator.index;
             return *this;
         }
 
         Iterator operator++(int)
         {
             Iterator temp = *this;
-            index += loader->batch_size;
+            ++(*this);
             return temp;
         }
 
@@ -93,19 +115,31 @@ public:
             return index != other.index;
         }
 
-        auto operator*() const
+        Batch<DType, LType> operator*() const
         {
-            xt::xarray<DType> data;
-            xt::xarray<LType> label;
+            size_t end = (indexes_size - index) / loader->batch_size >= 2 ? 
+                index + loader->batch_size : indexes_size;
+            size_t get_size = end - index;
 
-            size_t end = min(index + loader->batch_size, loader->indices.size());
+            xt::svector<size_t> data_shape = loader->ptr_dataset->get_data_shape();
+            xt::svector<size_t> label_shape = loader->ptr_dataset->get_label_shape();
 
-            for (size_t i = index; i < end; ++i)
+            data_shape[0] = get_size;
+            label_shape[0] = get_size;
+
+            xt::xarray<DType> data = xt::xarray<DType>::from_shape(data_shape);
+            xt::xarray<LType> label = xt::xarray<LType>::from_shape(label_shape);
+            bool has_label = label.dimension();
+            size_t batch_index = 0;
+
+            for (size_t i = index; i < end; i++)
             {
-                size_t dataset_index = loader->indices[i];
-                DataLabel<DType, LType> data_label = loader->ptr_dataset->getitem(dataset_index);
-                data = xt::concatenate(xt::xtuple(data, data_label.getData()), 0);
-                label = xt::concatenate(xt::xtuple(label, data_label.getLabel()), 0);
+                auto data_label = loader->ptr_dataset->getitem(loader->indexes(i));
+                xt::view(data, batch_index, xt::all()) = data_label.getData();
+                if (has_label) 
+                    xt::view(label, batch_index, xt::all()) = data_label.getLabel();
+
+                batch_index++;
             }
 
             return Batch<DType, LType>(data, label);

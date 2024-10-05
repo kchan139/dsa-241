@@ -23,9 +23,7 @@ private:
     xt::xarray<LType> label;
 
 public:
-    DataLabel(xt::xarray<DType> data, xt::xarray<LType> label) : data(data), label(label)
-    {
-    }
+    DataLabel(xt::xarray<DType> data, xt::xarray<LType> label) : data(data), label(label) {}
     xt::xarray<DType> getData() const { return data; }
     xt::xarray<LType> getLabel() const { return label; }
 };
@@ -38,9 +36,7 @@ private:
     xt::xarray<LType> label;
 
 public:
-    Batch(xt::xarray<DType> data, xt::xarray<LType> label) : data(data), label(label)
-    {
-    }
+    Batch(xt::xarray<DType> data, xt::xarray<LType> label) : data(data), label(label) {}
     virtual ~Batch() {}
     xt::xarray<DType> &getData() { return data; }
     xt::xarray<LType> &getLabel() { return label; }
@@ -70,55 +66,44 @@ private:
     xt::svector<unsigned long> data_shape, label_shape;
 
 public:
-    /* TensorDataset:
-     * need to initialize:
-     * 1. data, label;
-     * 2. data_shape, label_shape
-     */
     TensorDataset(xt::xarray<DType> data, xt::xarray<LType> label)
     {
-        /* TODO: your code is here for the initialization
-         */
-
         this->data = data;
         this->label = label;
-        this->data_shape = xt::svector<unsigned long>(this->data.shape().begin(), this->data.shape().end());
-        this->label_shape = xt::svector<unsigned long>(this->label.shape().begin(), this->label.shape().end());
+        this->data_shape = xt::svector<unsigned long>(data.shape().begin(), data.shape().end());
+        this->label_shape = xt::svector<unsigned long>(label.shape().begin(), label.shape().end());
     }
-    /* len():
-     *  return the size of dimension 0
-     */
+
     int len()
     {
-        /* TODO: your code is here to return the dataset's length
-         */
-
-        return static_cast<int>(label_shape[0]);
+        return static_cast<int>(this->data_shape[0]);
     }
 
-    /* getitem:
-     * return the data item (of type: DataLabel) that is specified by index
-     */
     DataLabel<DType, LType> getitem(int index)
     {
         /* TODO: your code is here
          */
+        if (index < 0 || index >= this->len())
+            throw out_of_range("Index is out of range!");
 
-        return DataLabel<DType, LType>(this->data(index), this->label(index));
+        return this->label.dimension() ? 
+            DataLabel<DType, LType>(
+                xt::view(this->data, index, xt::all()), 
+                xt::view(this->label, index, xt::all())
+            ) : 
+            DataLabel<DType, LType>(
+                xt::view(this->data, index, xt::all()), 
+                this->label
+            );
     }
 
     xt::svector<unsigned long> get_data_shape()
     {
-        /* TODO: your code is here to return data_shape
-         */
-
         return this->data_shape;
     }
+
     xt::svector<unsigned long> get_label_shape()
     {
-        /* TODO: your code is here to return label_shape
-         */
-
         return this->label_shape;
     }
 };
