@@ -34,26 +34,27 @@ private:
     /*TODO: add more member variables to support the iteration*/
 public:
     DataLoader(Dataset<DType, LType> *ptr_dataset,
-               int batch_size,
+               size_t batch_size,
                bool shuffle = true,
                bool drop_last = false)
     : ptr_dataset(ptr_dataset), batch_size(batch_size), shuffle(shuffle), drop_last(drop_last), curr_idx(0)
     {
         /*TODO: Add your code to do the initialization */
-        int dataset_len = ptr_dataset->len();
-
-        if (drop_last)
-            dataset_len = (dataset_len / batch_size) * batch_size;
-
-        
+        size_t dataset_len = ptr_dataset->len();
         indexes = xt::arange<size_t>(0, dataset_len);
+        
         if (shuffle) 
         {
-            xt::random::default_engine_type engine(0);
+            xt::random::default_engine_type engine(6);
             xt::random::shuffle(indexes, engine);
             // std::default_random_engine engine(0);
             // std::shuffle(indexes.begin(), indexes.end(), engine);
         }
+
+        if (drop_last)
+            dataset_len = (dataset_len / batch_size) * batch_size;
+        
+        indexes = xt::view(indexes, xt::range(0, dataset_len));
     }
     virtual ~DataLoader() {}
 
@@ -98,7 +99,7 @@ public:
         Iterator &operator=(const Iterator &iterator)
         {
             loader = iterator.loader;
-            index = iterator.index;
+            index  = iterator.index;
             return *this;
         }
 
