@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
   std::string arg1 = argv[1];
   if (arg1 == "test_unit_array") {
     handleTestUnitArray(argc, argv);
-  } else if (arg1 == "test_unit_linkeList") {
+  } else if (arg1 == "test_unit_linkedList") {
     handleTestUnitLinkedList(argc, argv);
   } else if (arg1 == "test_unit_data") {
     handleTestUnitData(argc, argv);

@@ -264,6 +264,8 @@ bool T_LinkedList::linkedList12() {
   //! data
   DLinkedList<int> list;
   list.add(0);
+ 
+  
 
   //! expect
   string expect = "removeItem=1;[];size=0;empty=1";
@@ -787,7 +789,7 @@ bool T_LinkedList::linkedList35() {
   //! output
   stringstream output;
   output << "[";
-  for (auto it = list.bbegin(); it != list.bend(); --it) {
+  for (auto it = list.bbegin(); it != list.bend(); ++it) {
     if (it != list.bbegin()) output << ", ";
     output << **it;
   }
@@ -810,7 +812,7 @@ bool T_LinkedList::linkedList36() {
 
   auto interator = list.bbegin();
   interator.remove(&Point::pointRemove);
-  interator--;
+  interator++;
   interator.remove(&Point::pointRemove);
 
   //! expect
@@ -819,7 +821,7 @@ bool T_LinkedList::linkedList36() {
   //! output
   stringstream output;
   output << "[";
-  for (auto it = list.bbegin(); it != list.bend(); --it) {
+  for (auto it = list.bbegin(); it != list.bend(); ++it) {
     if (it != list.bbegin()) output << ", ";
     output << **it;
   }

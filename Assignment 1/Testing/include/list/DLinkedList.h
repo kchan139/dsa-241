@@ -301,6 +301,21 @@ public:
 			return iterator;
 		}
 
+		// Prefix ++ overload for backward iteration
+		BWDIterator &operator++()
+		{
+			pNode = pNode->prev;
+			return *this;
+		}
+
+		// Postfix ++ overload for backward iteration
+		BWDIterator operator++(int)
+		{
+			BWDIterator iterator = *this;
+			++*this;
+			return iterator;
+		}
+
 		T &operator*()
 		{
 			return pNode->data;
