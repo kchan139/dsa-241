@@ -808,8 +808,8 @@ bool T_Data::data30() {
 bool T_Data::data31() {
   string name = "data31";
   //! data
-  xt::xarray<float> data = {1, 2, 3, 4, 5, 5, 4};
-  xt::xarray<string> label = {"1", "2", "3", "4", "5", "5", "4"};
+  xt::xarray<float> data = {1, 2, 3, 4,5,5,4};
+  xt::xarray<string> label = {"1", "2", "3", "4","5","5","4"};
   TensorDataset<double, string> ds(data, label);
   DataLoader<double, string> loader(&ds, 2, true, true);
   //! expect

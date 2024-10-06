@@ -9,6 +9,11 @@
  */
 #include "random_test.hpp"
 
+struct Task1 {
+  int number_line, capacity;
+  string skip, _iList, _type, _itemEqual, _deleteUserData;
+};
+
 RandomTest::RandomTest(int from, int to) : from(from), to(to) {}
 
 void RandomTest::runTest() {
@@ -17,71 +22,77 @@ void RandomTest::runTest() {
         "test/random_test/input/input_" + std::to_string(i);
     std::string outputFilename =
         "test/random_test/output/output_" + std::to_string(i);
+    // "test/random_test/expected/expected_" + std::to_string(i);
     processFile(inputFilename, outputFilename);
   }
 
-  // compareOutputs();
+  compareOutputs();
 }
-template <class T>
-void RandomTest::runtime(IList<T> &list) {}
 
 void RandomTest::processFile(string inputFilename, string outputFilename) {
   std::ifstream file(inputFilename);
-  int number_line, capacity;
   // Check if the file was successfully opened
   if (!file.is_open()) {
     cerr << "Error: Could not open file " << inputFilename << endl;
     return;
   }
 
-  string skip, _iList, _type, _itemEqual, _deleteUserData;
-  file >> number_line >> skip >> _iList >> skip >> _type;
-  file >> skip >> skip >> _itemEqual;
-  file >> skip >> skip >> _deleteUserData;
-  file >> skip >> skip >> capacity >> skip;
-  // std::map<std::string, bool (*)(Point &, Point &)> function_itemEqual;
-  // function_itemEqual["null"] = 0;
-  // function_itemEqual["pointEQ_X"] = &Point::pointEQ_X;
-  // function_itemEqual["pointEQ_Y"] = &Point::pointEQ_Y;
-  // function_itemEqual["pointEQ_Z"] = &Point::pointEQ_Z;
-  // function_itemEqual["pointEQ"] = &Point::pointEQ;
+  int seed, batch_size;
+  string skip, date_label, input, shuffle, drop_last;
+  std::vector<std::size_t> shape;
 
-  // if (_iList == "XArrayList") {
-  //   if (_type == "string") {
-  //     XArrayList<std::string> list(0, 0, capacity);
-  //     this->runtime(list);
-  //   } else if (_type == "int") {
-  //     XArrayList<int> list(0, 0, capacity);
-  //     this->runtime(list);
-  //   } else if (_type == "bool") {
-  //     XArrayList<bool> list(0, 0, capacity);
-  //     this->runtime(list);
-  //   } else if (_type == "Point") {
-  //     XArrayList<Point> list(0, function_itemEqual[_itemEqual], capacity);
-  //     this->runtime(list);
-  //   } else if (_type == "Point*") {
-  //     XArrayList<Point *> list(&XArrayList<Point *>::free,
-  //                              function_itemEqual[_itemEqual], capacity);
-  //     this->runtime(list);
-  //   }
-  // } else if (_iList == "XArrayList") {
-  //   if (_type == "string") {
-  //     XArrayList<std::string> list(0, 0, capacity);
-  //     this->runtime(list);
-  //   } else if (_type == "int") {
-  //     XArrayList<int> list(0, 0, capacity);
-  //     this->runtime(list);
-  //   } else if (_type == "bool") {
-  //     XArrayList<bool> list(0, 0, capacity);
-  //     this->runtime(list);
-  //   } else if (_type == "Point") {
-  //     XArrayList<Point> list(0, function_itemEqual[_itemEqual], capacity);
-  //     this->runtime(list);
-  //   } else if (_type == "Point*") {
-  //     XArrayList<Point *> list(&XArrayList<Point *>::free,
-  //                              function_itemEqual[_itemEqual], capacity);
-  //     this->runtime(list);
-  //   }
+  file >> skip >> skip >> seed;
+  file >> skip >> skip >> date_label;
+  file >> skip >> skip >> batch_size >> skip >> shuffle >> skip >> drop_last;
+  file >> skip >> skip;
+  while (file >> input) {
+    if (input == "len")
+      break;
+    else if (input == "x")
+      continue;
+    shape.push_back(stoi(input));
+  }
+  file >> skip >> skip >> skip;
+
+  std::ofstream outFile(outputFilename);
+  if (!outFile) {
+    std::cerr << "Error opening output file: " << outputFilename << '\n';
+    return;
+  }
+
+  xt::random::default_engine_type engine(seed);
+  xt::xarray<double> data =
+      xt::random::randn<double>(shape, 0.0f, 100.0f, engine);
+  xt::xarray<int> label;
+
+  if (date_label != "null") {
+    label = xt::random::randint<int>({shape[0]}, 0, 100, engine);
+  }
+  TensorDataset<double, int> tensor(data, label);
+  DataLoader<double, int> loader(&tensor, batch_size, shuffle == "True",
+                                 drop_last == "True");
+  outFile << "len=" << tensor.len() << endl;
+  outFile << "get_data_shape=" << shape2str(tensor.get_data_shape()) << endl;
+  outFile << "get_data_shape=" << shape2str(tensor.get_label_shape()) << endl;
+  outFile << "foreach" << endl;
+  for (auto batch : loader) {
+    outFile << "getData " << batch.getData() << endl;
+    outFile << "getLabel " << batch.getLabel() << endl;
+  }
+  int index;
+  while (file >> input) {
+    file >> index;
+    outFile << input << " " << index << endl;
+    try {
+      DataLabel<double, int> getitem = tensor.getitem(index);
+      xt::xarray<double> getData = getitem.getData();
+      xt::xarray<int> getLabel = getitem.getLabel();
+      outFile << "getData " << getData << endl;
+      outFile << "getLabel " << getLabel << endl;
+    } catch (const std::out_of_range &e) {
+      outFile << "Error: Out of range exception: " + string(e.what()) << endl;
+    }
+  }
 }
 
 void RandomTest::compareOutputs() {
@@ -90,32 +101,29 @@ void RandomTest::compareOutputs() {
 
   for (int i = from; i <= to; ++i) {
     std::string outputFile =
-        "test/random_test/output/output_" + std::to_string(i) + ".txt";
+        "test/random_test/output/output_" + std::to_string(i);
     std::string expectedFile =
-        "test/random_test/expected/expected_" + std::to_string(i) + ".txt";
+        "test/random_test/expected/expected_" + std::to_string(i);
 
     try {
       bool result = compareFiles(outputFile, expectedFile);
       if (result) {
         // Print pass message if files match
-        std::cout << green << "Test input_" << i << " --------------- PASS"
-                  << reset << "\n";
+        std::cout << "Test input_" << i << " --------------- PASS";
       } else {
         // Print fail message if files don't match
         fails.push_back("input_" + std::to_string(i));
-        std::cout << red << "Test input_" << i << " --------------- FAIL"
-                  << reset << "\n";
+        std::cout << "Test input_" << i << " --------------- FAIL";
       }
       ++totalTests;
     } catch (const std::runtime_error &e) {
-      std::cerr << "Error: " << e.what() << std::endl;
+      std::cerr << "Error: " << e.what() << '\n';
     }
   }
 
-  std::cout << cyan << "\nResult -------------------------" << reset
-            << std::endl;
+  std::cout << cyan << "\nResult -------------------------" << reset << '\n';
   if (fails.empty()) {
-    std::cout << green << "All tests passed!" << reset << std::endl;
+    std::cout << green << "All tests passed!" << reset << '\n';
   } else {
     int failedTests = fails.size();
     int passedTests = totalTests - failedTests;
@@ -128,8 +136,7 @@ void RandomTest::compareOutputs() {
     for (const auto &fail : fails) {
       std::cout << "  " << fail;
     }
-    std::cout << cyan << "\nPass rate: " << passRate << "%" << reset
-              << std::endl;
+    std::cout << cyan << "\nPass rate: " << passRate << "%" << reset << '\n';
   }
 }
 

@@ -10,8 +10,8 @@
 #ifndef RANDOM_TEST_HPP
 #define RANDOM_TEST_HPP
 
-#include "../../include/list/listheader.h"
-#include "../main.hpp"
+#include "../../main.hpp"
+#include "ann/dataloader.h"
 #include "util/Point.h"
 class RandomTest {
  public:
@@ -22,8 +22,6 @@ class RandomTest {
  private:
   void processFile(string inputFilename, string outputFilename);
   void compareOutputs();
-  template <class T>
-  void runtime(IList<T> &list);
   int from;
   int to;
 
