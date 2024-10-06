@@ -45,10 +45,11 @@ public:
         
         if (shuffle) 
         {
-            xt::random::default_engine_type engine(0);
-            xt::random::shuffle(indexes, engine);
+            // xt::random::default_engine_type engine(0);
+            // xt::random::shuffle(indexes, engine);
             // std::default_random_engine engine(0);
             // std::shuffle(indexes.begin(), indexes.end(), engine);
+            xt::random::shuffle(indexes);
         }
 
         if (drop_last)
