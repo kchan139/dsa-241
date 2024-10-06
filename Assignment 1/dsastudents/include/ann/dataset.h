@@ -39,7 +39,11 @@ public:
     Batch(xt::xarray<DType> data, xt::xarray<LType> label) : data(data), label(label) {}
     virtual ~Batch() {}
     xt::xarray<DType> &getData() { return data; }
-    xt::xarray<LType> &getLabel() { return label; }
+    xt::xarray<LType> &getLabel() { 
+        if (label.dimension() == 0)
+            label = xt::xarray<LType>();
+        return label; 
+    }
 };
 
 template <typename DType, typename LType>
