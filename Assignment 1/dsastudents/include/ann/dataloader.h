@@ -52,7 +52,9 @@ public:
             xt::random::shuffle(indexes);
         }
 
-        if (drop_last)
+        if (batch_size > dataset_len)
+            dataset_len = 0;
+        else if (drop_last)
             dataset_len = (dataset_len / batch_size) * batch_size;
         
         indexes = xt::view(indexes, xt::range(0, dataset_len));
