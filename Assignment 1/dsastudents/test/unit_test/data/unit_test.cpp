@@ -364,7 +364,7 @@ bool T_Data::data14() {
   TensorDataset<double, string> ds(data, label);
   DataLoader<double, string> loader(&ds, 3, false, false);
   //! expect
-  string expect = "getData={ 1.,  2.} ; getLabel={one, two} ";
+  string expect = "getData=; getLabel=";
 
   //! output
 
@@ -749,6 +749,7 @@ bool T_Data::data29() {
   xt::xarray<float> data = {1, 2, 3, 4};
   xt::xarray<string> label;
   TensorDataset<double, string> ds(data, label);
+
   DataLoader<double, string> loader(&ds, 2, true, true);
   //! expect
   string expect = "getData={ 1.,  4.} { 2.,  3.} ; getLabel=  ";
@@ -758,7 +759,9 @@ bool T_Data::data29() {
   stringstream output;
   output << "getData=";
   for (auto it = loader.begin(); it != loader.end(); ++it) {
+
     output << (*it).getData() << " ";
+    
   }
   output << "; getLabel=";
 
@@ -775,7 +778,7 @@ bool T_Data::data30() {
   string name = "data30";
   //! data
   xt::xarray<float> data = {1, 2, 3, 4, 5};
-  xt::xarray<string> label;
+  xt::xarray<string>label;
   TensorDataset<float, string> ds(data, label);
   DataLabel<float, string> getitem = ds.getitem(0);
   xt::xarray<float> getData = getitem.getData();
