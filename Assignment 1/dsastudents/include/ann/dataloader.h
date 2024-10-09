@@ -36,7 +36,7 @@ public:
     DataLoader(Dataset<DType, LType> *ptr_dataset,
                unsigned long batch_size,
                bool shuffle = true,
-               bool drop_last = false)
+               bool drop_last = false, int seed = -1)
     : ptr_dataset(ptr_dataset), batch_size(batch_size), shuffle(shuffle), drop_last(drop_last), curr_idx(0)
     {
         /*TODO: Add your code to do the initialization */
@@ -48,7 +48,12 @@ public:
             // xt::random::default_engine_type engine(0);
             // xt::random::shuffle(indexes, engine);
             // xt::random::seed(0);
-            xt::random::shuffle(indexes);
+            if (seed >= 0)
+            {
+                xt::random::seed(seed);
+                xt::random::shuffle(indexes);
+            }
+            else xt::random::shuffle(indexes);
         }
 
         if (batch_size > dataset_len)
