@@ -238,6 +238,7 @@ template<class K, class V>
 V xMap<K,V>::put(K key, V value){
     int index = this->hashCode(key, capacity);
     //YOUR CODE IS HERE
+    
     for (auto& entry : table[index]) {
         if (keyEQ(entry->key, key)) {
             V oldValue = entry->value;
@@ -259,6 +260,7 @@ V& xMap<K,V>::get(K key){
     int index = hashCode(key, capacity);
     // V retValue = value;
     //YOUR CODE IS HERE
+
     for (auto& entry : table[index])
         if (keyEQ(entry->key, key))
             return entry->value;
@@ -274,6 +276,7 @@ V xMap<K,V>::remove(K key,void (*deleteKeyInMap)(K)){
     int index = hashCode(key, capacity);
     V retValue = value;
     //YOUR CODE IS HERE   
+
     for (auto it = table[index].begin(); it != table[index].end(); ++it) {
         if (keyEQ((*it)->key, key)) {
             retValue = (*it)->value;
@@ -299,6 +302,7 @@ template<class K, class V>
 bool xMap<K,V>::remove(K key, V value, void (*deleteKeyInMap)(K), void (*deleteValueInMap)(V)){
     //YOUR CODE IS HERE  
     int index = hashCode(key, capacity);
+
     for (auto it = table[index].begin(); it != table[index].end(); ++it) {
         if (keyEQ((*it)->key, key) && valueEQ((*it)->value, value)) {
             if (deleteKeyInMap) 
@@ -319,6 +323,7 @@ template<class K, class V>
 bool xMap<K,V>::containsKey(K key){
     //YOUR CODE IS HERE 
     int index = hashCode(key, capacity);
+
     for (auto& entry : table[index])
         if (keyEQ(entry->key, key))
             return true;
@@ -360,6 +365,7 @@ template<class K, class V>
 DLinkedList<K> xMap<K,V>::keys(){
     //YOUR CODE IS HERE 
     DLinkedList<K> keyList;
+
     for (int i = 0; i < capacity; ++i)
         for (auto& entry : table[i])
             keyList.add(entry->key);
@@ -371,6 +377,7 @@ template<class K, class V>
 DLinkedList<V> xMap<K,V>::values(){
     //YOUR CODE IS HERE 
     DLinkedList<V> valueList;
+    
     for (int i = 0; i < capacity; ++i)
         for (auto& entry : table[i])
             valueList.add(entry->value);
