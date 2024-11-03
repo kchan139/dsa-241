@@ -206,21 +206,37 @@ xMap<K,V>::xMap(
     deleteValues(deleteValues), keyEqual(keyEqual), deleteKeys(deleteKeys) {
     //YOUR CODE IS HERE
     capacity = 10;
-    count = 0;
-    table = new DLinkedList<Entry*>[capacity];
+    count    = 0;
+    table    = new DLinkedList<Entry*>[capacity];
 }
 
 template<class K, class V>
 xMap<K,V>::xMap(const xMap<K,V>& map){
     //YOUR CODE IS HERE
-    copyMapFrom(map);
+    // copyMapFrom(map);
+    // deleteValues = deleteKeys = nullptr;
+    hashCode     = map.hashCode;
+    loadFactor   = map.loadFactor;
+    valueEqual   = map.valueEqual;
+    keyEqual     = map.keyEqual;
+    deleteValues = deleteKeys = nullptr;
+    capacity     = map.capacity;
+    count        = map.count;
+    table = new DLinkedList<Entry *>[map.capacity];
+    
+    for (int i = 0; i < map.capacity; i++)
+        for (auto entry : map.table[i])
+            table[i].add(new Entry(entry->key, entry->value));
 }
 
 template<class K, class V>
 xMap<K,V>& xMap<K,V>::operator=(const xMap<K,V>& map){
     //YOUR CODE IS HERE
-    if (this != &map)
+    if (this != &map) {
+        // removeInternalData();
         copyMapFrom(map);
+        deleteValues = deleteKeys = nullptr;
+    }
 
     return *this;
 }
@@ -275,25 +291,40 @@ template<class K, class V>
 V xMap<K,V>::remove(K key,void (*deleteKeyInMap)(K)){
     int index = hashCode(key, capacity);
     // V retValue = value;
-    //YOUR CODE IS HERE   
+    //YOUR CODE IS HERE
 
     DLinkedList<Entry*>& bucket = table[index];
-
-    for (auto it = bucket.begin(); it != bucket.end(); ++it) {
-        Entry* entry = *it;
-        if (keyEQ(entry->key, key)) {
-            V oldValue = entry->value;
-            it.remove();
+    for (auto it = bucket.begin(); it != bucket.end(); it++)
+    {
+        if (this->keyEQ((*it)->key, key))
+        {
+            V retValue = (*it)->value;
 
             if (deleteKeyInMap)
-                deleteKeyInMap(entry->key);
-                
-            delete entry;
-            count--;
+                deleteKeyInMap((*it)->key);
 
-            return oldValue;
+            bucket.removeItem((*it), deleteEntry);
+            this->count--;
+
+            return retValue;
         }
     }
+
+    // for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+    //     Entry* entry = *it;
+    //     if (keyEQ(entry->key, key)) {
+    //         V oldValue = entry->value;
+    //         it.remove();
+
+    //         if (deleteKeyInMap)
+    //             deleteKeyInMap(entry->key);
+                
+    //         delete entry;
+    //         count--;
+
+    //         return oldValue;
+    //     }
+    // }
 
     //key: not found
     stringstream os;
@@ -307,23 +338,40 @@ bool xMap<K,V>::remove(K key, V value, void (*deleteKeyInMap)(K), void (*deleteV
     int index = hashCode(key, capacity);
     DLinkedList<Entry*>& bucket = table[index];
 
-    for (auto it = bucket.begin(); it != bucket.end(); ++it) {
-        Entry* entry = *it;
-        if (keyEQ(entry->key, key) && valueEQ(entry->value, value)) {
-            it.remove();
-
-            if (deleteKeyInMap)
-                deleteKeyInMap(entry->key);
-
+    for (auto it = bucket.begin(); it != bucket.end(); it++)
+    {
+        if (this->keyEQ((*it)->key, key) && this->valueEQ((*it)->value, value))
+        {
+            if (deleteKeyInMap) 
+                deleteKeyInMap((*it)->key);
+        
             if (deleteValueInMap) 
-                deleteValueInMap(entry->value);
+                deleteValueInMap((*it)->value);
 
-            delete entry;
-            count--;
+            bucket.removeItem((*it), deleteEntry);
+            this->count--;
 
             return true;
         }
     }
+
+    // for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+    //     Entry* entry = *it;
+    //     if (keyEQ(entry->key, key) && valueEQ(entry->value, value)) {
+    //         it.remove();
+
+    //         if (deleteKeyInMap)
+    //             deleteKeyInMap(entry->key);
+
+    //         if (deleteValueInMap) 
+    //             deleteValueInMap(entry->value);
+
+    //         delete entry;
+    //         count--;
+
+    //         return true;
+    //     }
+    // }
     return false; 
 }
 
@@ -520,7 +568,7 @@ void xMap<K,V>::removeInternalData(){
     if(deleteValues != 0) deleteValues(this);
         
     //Remove all entries in the current map
-    for(int idx=0; idx < this->capacity; idx++){
+    for(int idx = 0; idx < this->capacity; idx++) {
         DLinkedList<Entry*>& list = this->table[idx];
         for(auto pEntry: list) delete pEntry;
         list.clear();
@@ -554,11 +602,10 @@ void xMap<K,V>::copyMapFrom(const xMap<K,V>& map){
     //SHOULD NOT COPY: deleteKeys, deleteValues => delete ONLY TIME in map if needed
     
     //copy entries
-    for(int idx=0; idx < map.capacity; idx++){
+    for(int idx = 0; idx < map.capacity; idx++) {
         DLinkedList<Entry*>& list = map.table[idx];
-        for(auto pEntry: list){
+        for(auto pEntry: list)
             this->put(pEntry->key, pEntry->value);
-        }
     }
 }
 #endif /* XMAP_H */
