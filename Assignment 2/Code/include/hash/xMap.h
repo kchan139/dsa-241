@@ -274,21 +274,29 @@ V& xMap<K,V>::get(K key){
 template<class K, class V>
 V xMap<K,V>::remove(K key,void (*deleteKeyInMap)(K)){
     int index = hashCode(key, capacity);
-    V retValue = value;
+    // V retValue = value;
     //YOUR CODE IS HERE   
 
-    for (auto it = table[index].begin(); it != table[index].end(); ++it) {
-        if (keyEQ((*it)->key, key)) {
-            retValue = (*it)->value;
+    DLinkedList<Entry*>& bucket = table[index];
 
-            if (deleteKeyInMap) 
-                deleteKeyInMap((*it)->key);
-            delete *it;
+    for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+        Entry* entry = *it;
+        if (keyEQ(entry->key, key)) {
+            V oldValue = entry->value;
 
-            table[index].remove(it);
+            // Remove entry from the bucket
+            it.remove();
+
+            // Optional deletion of the key using the provided function
+            if (deleteKeyInMap) {
+                deleteKeyInMap(entry->key);
+            }
+
+            // Delete the entry object and decrement the count
+            delete entry;
             count--;
 
-            return retValue;
+            return oldValue;
         }
     }
 
@@ -302,17 +310,26 @@ template<class K, class V>
 bool xMap<K,V>::remove(K key, V value, void (*deleteKeyInMap)(K), void (*deleteValueInMap)(V)){
     //YOUR CODE IS HERE  
     int index = hashCode(key, capacity);
+    DLinkedList<Entry*>& bucket = table[index];
 
-    for (auto it = table[index].begin(); it != table[index].end(); ++it) {
-        if (keyEQ((*it)->key, key) && valueEQ((*it)->value, value)) {
-            if (deleteKeyInMap) 
-                deleteKeyInMap((*it)->key);
-            if (deleteValueInMap) 
-                deleteValueInMap((*it)->value);
-            delete *it;
+    for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+        Entry* entry = *it;
+        if (keyEQ(entry->key, key) && valueEQ(entry->value, value)) {
+            // Remove entry from the bucket
+            it.remove();
 
-            table[index].remove(it);
+            // Optional deletion of the key and value using the provided functions
+            if (deleteKeyInMap) {
+                deleteKeyInMap(entry->key);
+            }
+            if (deleteValueInMap) {
+                deleteValueInMap(entry->value);
+            }
+
+            // Delete the entry object and decrement the count
+            delete entry;
             count--;
+
             return true;
         }
     }

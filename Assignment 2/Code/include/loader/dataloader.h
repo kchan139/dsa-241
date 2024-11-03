@@ -12,8 +12,8 @@
 
 #ifndef DATALOADER_H
 #define DATALOADER_H
-#include "ann/xtensor_lib.h"
-#include "ann/dataset.h"
+#include "tensor/xtensor_lib.h"
+#include "loader/dataset.h"
 
 using namespace std;
 

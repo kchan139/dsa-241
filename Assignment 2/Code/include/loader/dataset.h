@@ -12,7 +12,7 @@
 
 #ifndef DATASET_H
 #define DATASET_H
-#include "ann/xtensor_lib.h"
+#include "tensor/xtensor_lib.h"
 using namespace std;
 
 template <typename DType, typename LType>
