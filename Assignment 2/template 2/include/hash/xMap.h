@@ -365,6 +365,7 @@ template<class K, class V>
 void xMap<K,V>::clear(){
     //YOUR CODE IS HERE 
     removeInternalData();
+    capacity = 10;
     table = new DLinkedList<Entry*>[capacity];
     count = 0;
 }
