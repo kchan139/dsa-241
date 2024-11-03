@@ -14,8 +14,10 @@
 #ifndef HEAP_H
 #define HEAP_H
 #include <memory.h>
-#include "heap/IHeap.h"
+#include <iostream>
 #include <sstream>
+#include <string>
+#include "heap/IHeap.h"
 /*
  * function pointer: int (*comparator)(T& lhs, T& rhs)
  *      compares objects of type T given in lhs and rhs.
@@ -412,7 +414,7 @@ void Heap<T>::copyFrom(const Heap<T>& heap){
     this->deleteUserData = heap.deleteUserData;
     
     //Copy items from heap:
-    for(int idx=0; idx < heap.size(); idx++){
+    for(int idx=0; idx < heap.count; idx++){
         this->elements[idx] = heap.elements[idx];
     }
 }

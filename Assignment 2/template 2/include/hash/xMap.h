@@ -283,16 +283,11 @@ V xMap<K,V>::remove(K key,void (*deleteKeyInMap)(K)){
         Entry* entry = *it;
         if (keyEQ(entry->key, key)) {
             V oldValue = entry->value;
-
-            // Remove entry from the bucket
             it.remove();
 
-            // Optional deletion of the key using the provided function
-            if (deleteKeyInMap) {
+            if (deleteKeyInMap)
                 deleteKeyInMap(entry->key);
-            }
-
-            // Delete the entry object and decrement the count
+                
             delete entry;
             count--;
 
@@ -315,18 +310,14 @@ bool xMap<K,V>::remove(K key, V value, void (*deleteKeyInMap)(K), void (*deleteV
     for (auto it = bucket.begin(); it != bucket.end(); ++it) {
         Entry* entry = *it;
         if (keyEQ(entry->key, key) && valueEQ(entry->value, value)) {
-            // Remove entry from the bucket
             it.remove();
 
-            // Optional deletion of the key and value using the provided functions
-            if (deleteKeyInMap) {
+            if (deleteKeyInMap)
                 deleteKeyInMap(entry->key);
-            }
-            if (deleteValueInMap) {
-                deleteValueInMap(entry->value);
-            }
 
-            // Delete the entry object and decrement the count
+            if (deleteValueInMap) 
+                deleteValueInMap(entry->value);
+
             delete entry;
             count--;
 
