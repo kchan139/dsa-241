@@ -20,11 +20,12 @@
 Tanh::Tanh(string name) {
   if (trim(name).size() != 0)
     m_sName = name;
-  else
-    m_sName = "Tanh_" + to_string(++m_unLayer_idx);
+  else m_sName = "Tanh_" + to_string(++m_unLayer_idx);
 }
 
-Tanh::Tanh(const Tanh& orig) { m_sName = "Tanh_" + to_string(++m_unLayer_idx); }
+Tanh::Tanh(const Tanh& orig) { 
+  m_sName = "Tanh_" + to_string(++m_unLayer_idx); 
+}
 
 Tanh::~Tanh() {}
 

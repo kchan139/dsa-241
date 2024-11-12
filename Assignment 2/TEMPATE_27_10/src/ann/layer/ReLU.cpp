@@ -20,11 +20,12 @@
 ReLU::ReLU(string name) {
   if (trim(name).size() != 0)
     m_sName = name;
-  else
-    m_sName = "ReLU_" + to_string(++m_unLayer_idx);
+  else m_sName = "ReLU_" + to_string(++m_unLayer_idx);
 }
 
-ReLU::ReLU(const ReLU& orig) { m_sName = "ReLU_" + to_string(++m_unLayer_idx); }
+ReLU::ReLU(const ReLU& orig) { 
+  m_sName = "ReLU_" + to_string(++m_unLayer_idx); 
+}
 
 ReLU::~ReLU() {}
 

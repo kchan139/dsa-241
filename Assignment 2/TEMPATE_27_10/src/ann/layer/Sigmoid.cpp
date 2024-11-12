@@ -20,8 +20,7 @@
 Sigmoid::Sigmoid(string name) {
   if (trim(name).size() != 0)
     m_sName = name;
-  else
-    m_sName = "Sigmoid_" + to_string(++m_unLayer_idx);
+  else m_sName = "Sigmoid_" + to_string(++m_unLayer_idx);
 }
 
 Sigmoid::Sigmoid(const Sigmoid& orig) {

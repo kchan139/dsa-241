@@ -23,8 +23,7 @@ namespace fs = std::filesystem;
 Softmax::Softmax(int axis, string name) : m_nAxis(axis) {
   if (trim(name).size() != 0)
     m_sName = name;
-  else
-    m_sName = "Softmax_" + to_string(++m_unLayer_idx);
+  else m_sName = "Softmax_" + to_string(++m_unLayer_idx);
 }
 
 Softmax::Softmax(const Softmax& orig) {}
