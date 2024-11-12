@@ -23,8 +23,11 @@ CrossEntropy::CrossEntropy(const CrossEntropy& orig) : ILossLayer(orig) {}
 CrossEntropy::~CrossEntropy() {}
 
 double CrossEntropy::forward(xt::xarray<double> X, xt::xarray<double> t) {
-  // Todo CODE YOUR
+  m_aYtarget = t;
+  m_aCached_Ypred = X;
+  return cross_entropy (X, t);
 }
 xt::xarray<double> CrossEntropy::backward() {
-  // Todo CODE YOUR
+  const double EPSILON = 1e-7;
+  return -(m_aYtarget / (m_aCached_Ypred + EPSILON) / m_aYtarget.shape()[0]);
 }

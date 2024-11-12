@@ -29,10 +29,11 @@ Tanh::Tanh(const Tanh& orig) { m_sName = "Tanh_" + to_string(++m_unLayer_idx); }
 Tanh::~Tanh() {}
 
 xt::xarray<double> Tanh::forward(xt::xarray<double> X) {
-  // Todo CODE YOUR
+  m_aCached_Y = xt::tanh(X);
+  return m_aCached_Y;
 }
 xt::xarray<double> Tanh::backward(xt::xarray<double> DY) {
-  // Todo CODE YOUR
+  return DY * (1 - m_aCached_Y * m_aCached_Y);
 }
 
 string Tanh::get_desc() {
