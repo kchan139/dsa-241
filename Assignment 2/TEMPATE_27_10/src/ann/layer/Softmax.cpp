@@ -32,11 +32,15 @@ Softmax::Softmax(const Softmax& orig) {}
 Softmax::~Softmax() {}
 
 xt::xarray<double> Softmax::forward(xt::xarray<double> X) {
-  // Todo CODE YOUR
+  m_aCached_Y = softmax (X, m_nAxis);
+  return m_aCached_Y;
 }
 
 xt::xarray<double> Softmax::backward(xt::xarray<double> DY) {
-  // Todo CODE YOUR
+  xt::xarray<double> YT_Y = xt::linalg::outer(m_aCached_Y, m_aCached_Y);
+  xt::xarray<double> Y_DIAG = xt::diag(m_aCached_Y);
+  xt::xarray<double> Jacobian = Y_DIAG - YT_Y;
+  return xt::linalg::dot(Jacobian, DY);
 }
 
 string Softmax::get_desc() {

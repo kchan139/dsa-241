@@ -7,7 +7,7 @@ if [ -f main ]; then
 fi
 
 # Compile the C++ program  -fsanitize=undefined 
-g++ -std=c++17 -o main -DTEST_LAYER -I "./test"  -I "./include" -I "./include/tensor" -I "./include/sformat" -I "./include/ann" $(find ./src/ann/ -type f -iregex ".*\.cpp")  ./src/tensor/*.cpp main.cpp  test/unit_test/layer/unit_test_sigmoid.cpp
+g++ -std=c++17 -o main -DTEST_LAYER -I "./test"  -I "./include" -I "./include/tensor" -I "./include/sformat" -I "./include/ann" $(find ./src/ann/ -type f -iregex ".*\.cpp")  ./src/tensor/*.cpp main.cpp  test/unit_test/layer/unit_test_softmax.cpp
 
 # g++ -fsanitize=address -fsanitize=undefined -std=c++17 \
 #     -o main -Iinclude -Itest -Isrc \
