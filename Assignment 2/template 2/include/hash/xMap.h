@@ -593,7 +593,6 @@ template<class K, class V>
 void xMap<K,V>::copyMapFrom(const xMap<K,V>& map) {
     removeInternalData();
     
-    this->capacity = map.capacity;
     this->count = 0;
     this->table = new DLinkedList<Entry*>[capacity];
     
@@ -610,6 +609,7 @@ void xMap<K,V>::copyMapFrom(const xMap<K,V>& map) {
         for(auto pEntry: list)
             this->put(pEntry->key, pEntry->value);
     }
+    this->capacity = map.capacity;
 }
 #endif /* XMAP_H */
 

@@ -11,7 +11,7 @@ g++ -fsanitize=address -fsanitize=undefined -std=c++17 \
     -o main -Iinclude -Itest -Isrc \
     main.cpp \
     test/unit_test/hash/unit_test.cpp test/unit_test/heap/unit_test.cpp \
-    -DTEST_HEAP
+    -DTEST_HASH
 
 # g++ -std=c++17 \
 #     -o main -Iinclude -Itest -Isrc \
