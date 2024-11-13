@@ -30,10 +30,10 @@ int main(int argc, char** argv) {
     //case_batch_larger_nsamples();
     
     //Classification:
-    twoclasses_classification();
+    // twoclasses_classification();
     // threeclasses_classification();
     
-    // mlpDemo1();
+    mlpDemo1();
     // cout<<"\n=====================================================================================================\n";
     // mlpDemo2();
     // cout<<"\n=====================================================================================================\n";
