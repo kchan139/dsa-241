@@ -141,10 +141,19 @@ void MLPClassifier::set_working_mode(bool trainable) {
 
 // protected: for the training mode: begin
 double_tensor MLPClassifier::forward(double_tensor X) {
-  // YOUR CODE IS HERE
+  double_tensor Y = X;
+
+  for (auto layer : m_layers)
+    Y = layer->forward(Y);
+
+  return Y;
 }
 void MLPClassifier::backward() {
   // YOUR CODE IS HERE
+  double_tensor DY = m_pLossLayer->backward();
+
+  for (auto it = m_layers.bbegin(); it != m_layers.bend(); it++)
+    
 }
 // protected: for the training mode: end
 
