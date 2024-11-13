@@ -17,6 +17,8 @@ ILayer::ILayer() {
 }
 
 ILayer::ILayer(const ILayer& orig) {
+    m_sName = "Layer_" + to_string(++m_unLayer_idx);
+    m_trainable = orig.m_trainable;
 }
 
 ILayer::~ILayer() {
