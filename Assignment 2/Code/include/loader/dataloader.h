@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/cppFiles/file.h to edit this template
  */
 
-/* 
+/*
  * File:   dataloader.h
  * Author: ltsach
  *
@@ -17,165 +17,146 @@
 
 using namespace std;
 
-template<typename DType, typename LType>
-class DataLoader{
+template <typename DType, typename LType>
+class DataLoader
+{
 public:
-    class Iterator; //forward declaration for class Iterator
-    
+    class Iterator;
+
 private:
-    Dataset<DType, LType>* ptr_dataset;
-    int batch_size;
+    Dataset<DType, LType> *ptr_dataset;
+    unsigned long batch_size;
     bool shuffle;
     bool drop_last;
-    int nbatch;
-    ulong_tensor item_indices;
-    int m_seed;
-    
+
+    xt::xarray<unsigned long> indexes;
+    unsigned long curr_idx;
+    /*TODO: add more member variables to support the iteration*/
 public:
-    DataLoader(Dataset<DType, LType>* ptr_dataset, 
-            int batch_size, bool shuffle=true, 
-            bool drop_last=false, int seed=-1)
-                : ptr_dataset(ptr_dataset), 
-                batch_size(batch_size), 
-                shuffle(shuffle),
-                m_seed(seed){
-            nbatch = ptr_dataset->len()/batch_size;
-            item_indices = xt::arange(0, ptr_dataset->len());
-            if(shuffle)
+    DataLoader(Dataset<DType, LType> *ptr_dataset,
+               unsigned long batch_size,
+               bool shuffle = true,
+               bool drop_last = false, int seed = -1)
+    : ptr_dataset(ptr_dataset), batch_size(batch_size), shuffle(shuffle), drop_last(drop_last), curr_idx(0)
+    {
+        /*TODO: Add your code to do the initialization */
+        unsigned long dataset_len = ptr_dataset->len();
+        indexes = xt::arange<unsigned long>(0, dataset_len);
+        
+        if (shuffle) 
+        {
+            // xt::random::default_engine_type engine(0);
+            // xt::random::shuffle(indexes, engine);
+            // xt::random::seed(0);
+            if (seed >= 0)
             {
-                if(seed >= 0)
-                {
-                    xt::random::seed(seed);
-                    xt::random::shuffle(item_indices);
-                }
-            else
-                {
-                    xt::random::shuffle(item_indices);
-                }
+                xt::random::seed(seed);
+                xt::random::shuffle(indexes);
             }
+            else xt::random::shuffle(indexes);
+        }
+
+        if (batch_size > dataset_len)
+            dataset_len = 0;
+        else if (drop_last)
+            dataset_len = (dataset_len / batch_size) * batch_size;
+        
+        indexes = xt::view(indexes, xt::range(0, dataset_len));
     }
-    virtual ~DataLoader(){}
-    
-    //New method: from V2: begin
-    int get_batch_size(){ return batch_size; }
-    int get_sample_count(){ return ptr_dataset->len(); }
-    int get_total_batch(){return int(ptr_dataset->len()/batch_size); }
-    
-    //New method: from V2: end
+    virtual ~DataLoader() {}
+
     /////////////////////////////////////////////////////////////////////////
     // The section for supporting the iteration and for-each to DataLoader //
     /// START: Section                                                     //
     /////////////////////////////////////////////////////////////////////////
-public:
-    Iterator begin(){
-        //YOUR CODE IS HERE
-        return Iterator(this, true);
-    }
-    Iterator end(){
-        //YOUR CODE IS HERE
-        return Iterator(this, false);
-    }
-    
-    //BEGIN of Iterator
 
-    //YOUR CODE IS HERE: to define iterator
-    class Iterator{
+    /*TODO: Add your code here to support iteration on batch*/
+
+    Iterator begin()
+    {
+        return Iterator(this, 0);
+    }
+
+    Iterator end()
+    {
+        return Iterator(this, this->indexes.size());
+    }
+
+    class Iterator
+    {
     private:
-        DataLoader<DType, LType>* ptr_loader;
-        int batch_index;
+        DataLoader *loader;
+        unsigned long index;
+        unsigned long indexes_size;
+
     public:
-        Iterator(DataLoader<DType, LType>* Data = nullptr, bool begin = true) 
-        : ptr_loader(Data), batch_index(!begin && ptr_loader ?
-                                         ptr_loader->nbatch :
-                                        0)
-        {};
+        Iterator(DataLoader *loader, int index) : loader(loader), index(index) {
+            indexes_size = loader->indexes.size();
+        }
+
+        Iterator &operator++()
+        {
+            if ((indexes_size - index) / loader->batch_size >= 2)
+                index += loader->batch_size;
+            else index = indexes_size;
+
+            return *this;
+        }
 
         Iterator &operator=(const Iterator &iterator)
         {
-            this->ptr_loader = iterator.ptr_loader;
-            this->batch_index = iterator.batch_index;
+            loader = iterator.loader;
+            index  = iterator.index;
             return *this;
+        }
+
+        Iterator operator++(int)
+        {
+            Iterator temp = *this;
+            ++(*this);
+            return temp;
+        }
+
+        bool operator!=(const Iterator &other) const
+        {
+            return index != other.index;
         }
 
         Batch<DType, LType> operator*() const
         {
-            int start = batch_index * ptr_loader->batch_size;
-            int end = start + ptr_loader->batch_size;
+            unsigned long end = (indexes_size - index) / loader->batch_size >= 2 ? 
+                index + loader->batch_size : indexes_size;
+            unsigned long get_size = end - index;
 
-            int dataset_len = ptr_loader->ptr_dataset->len();
+            xt::svector<unsigned long> data_shape = loader->ptr_dataset->get_data_shape();
+            xt::svector<unsigned long> label_shape = loader->ptr_dataset->get_label_shape();
 
-            if(batch_index == ptr_loader->nbatch - 1 &&
-               !ptr_loader->drop_last                       ) 
-                end = dataset_len;
+            data_shape[0] = get_size;
+            label_shape[0] = get_size;
 
-            int actual_batch_size = end - start;
+            xt::xarray<DType> data = xt::xarray<DType>::from_shape(data_shape);
+            xt::xarray<LType> label = xt::xarray<LType>::from_shape(label_shape);
+            bool has_label = label.dimension();
+            unsigned long batch_index = 0;
 
-            auto data_shape = ptr_loader->ptr_dataset->get_data_shape();
-            auto label_shape = ptr_loader->ptr_dataset->get_label_shape();
-            data_shape[0] = actual_batch_size;
-
-            xt::xarray<DType> batch_data = xt::xarray<DType>::from_shape(data_shape);
-            xt::xarray<LType> batch_label = xt::xarray<LType>::from_shape(label_shape.empty() ?
-                                            xt::dynamic_shape<unsigned long>{0} : label_shape);
-
-            if (!label_shape.empty()) 
+            for (unsigned long i = index; i < end; i++)
             {
-                label_shape[0] = actual_batch_size;
-                batch_label = xt::xarray<LType>::from_shape(label_shape);
-            }
-            
+                auto data_label = loader->ptr_dataset->getitem(loader->indexes(i));
+                xt::view(data, batch_index, xt::all()) = data_label.getData();
+                if (has_label) 
+                    xt::view(label, batch_index, xt::all()) = data_label.getLabel();
 
-            for(int i = 0; i < actual_batch_size; i++) 
-            {
-                
-                DataLabel<DType, LType> item = 
-                ptr_loader->ptr_dataset->getitem(ptr_loader->item_indices[start + i]);
-                
-                xt::view(batch_data, i) = item.getData();
-                
-                if (!label_shape.empty()) 
-                {
-                    xt::view(batch_label, i) = item.getLabel();
-                }
+                batch_index++;
             }
 
-            if (!label_shape.empty()) 
-            {
-                return Batch<DType, LType>(batch_data, batch_label);
-            } 
-            else 
-            {
-                return Batch<DType, LType>(batch_data, xt::xarray<LType>());
-            }
-        }
-
-        bool operator!=(const Iterator &iterator)
-        {
-            return this->batch_index != iterator.batch_index 
-                || this->ptr_loader  != iterator.ptr_loader;
-        }
-        // Prefix ++ overload
-        Iterator &operator++()
-        {
-            ++batch_index;
-            return *this;
-        }
-        // Postfix ++ overload
-        Iterator operator++(int)
-        {
-            Iterator iterator = *this;
-            ++*this;
-            return iterator;    
+            return Batch<DType, LType>(data, label);
         }
     };
-    //END of Iterator
-    
+
     /////////////////////////////////////////////////////////////////////////
     // The section for supporting the iteration and for-each to DataLoader //
     /// END: Section                                                       //
     /////////////////////////////////////////////////////////////////////////
 };
 
-
 #endif /* DATALOADER_H */
-
