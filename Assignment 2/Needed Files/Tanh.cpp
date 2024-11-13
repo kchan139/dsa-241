@@ -34,7 +34,7 @@ xt::xarray<double> Tanh::forward(xt::xarray<double> X) {
   return m_aCached_Y;
 }
 xt::xarray<double> Tanh::backward(xt::xarray<double> DY) {
-  return DY * (1 - m_aCached_Y * m_aCached_Y);
+  return DY * (1 - xt::pow(m_aCached_Y, 2));
 }
 
 string Tanh::get_desc() {

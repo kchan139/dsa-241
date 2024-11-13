@@ -29,12 +29,12 @@ Sigmoid::Sigmoid(const Sigmoid& orig) {
 
 Sigmoid::~Sigmoid() {}
 xt::xarray<double> Sigmoid::forward(xt::xarray<double> X) {
-  m_aCached_Y = 1.0 / (1 + xt::exp(-X));
+  m_aCached_Y = 1 / (1 + xt::exp(-X));
   return m_aCached_Y;
 }
 
 xt::xarray<double> Sigmoid::backward(xt::xarray<double> DY) {
-  return DY * m_aCached_Y * (1.0 - m_aCached_Y);
+  return DY * m_aCached_Y * (1 - m_aCached_Y);
 }
 
 string Sigmoid::get_desc() {
