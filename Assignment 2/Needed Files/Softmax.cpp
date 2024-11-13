@@ -36,10 +36,9 @@ xt::xarray<double> Softmax::forward(xt::xarray<double> X) {
 }
 
 xt::xarray<double> Softmax::backward(xt::xarray<double> DY) {
-  xt::xarray<double> YT_Y = xt::linalg::outer(m_aCached_Y, m_aCached_Y);
-  xt::xarray<double> Y_DIAG = xt::diag(m_aCached_Y);
-  xt::xarray<double> Jacobian = Y_DIAG - YT_Y;
-  return xt::linalg::dot(Jacobian, DY);
+  double_tensor DZ = diag_stack(m_aCached_Y) 
+                      - outer_stack(m_aCached_Y,m_aCached_Y);
+  return matmul_on_stack(DZ, DY);
 }
 
 string Softmax::get_desc() {
