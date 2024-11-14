@@ -145,14 +145,14 @@ FCLayer::~FCLayer() {
 xt::xarray<double> FCLayer::forward(xt::xarray<double> X) {
     //YOUR CODE IS HERE
     xt::xarray<double> logits = xt::linalg::dot(
-        X, 
-        xt::transpose(m_aWeights)
+        X, xt::transpose(m_aWeights)
     );
 
     if (m_bUse_Bias)
         logits = xt::eval(logits + m_aBias);
         
-    m_aCached_X = X;
+    if (m_trainable) 
+        m_aCached_X = X;
 
     return logits;
 }
@@ -161,6 +161,10 @@ xt::xarray<double> FCLayer::backward(xt::xarray<double> DY) {
     //YOUR CODE IS HERE
     xt::xarray<double> DX = xt::linalg::dot(DY, m_aWeights);
     m_aGrad_W = xt::linalg::dot(xt::transpose(DY), m_aCached_X);
+
+    // m_aGrad_W = xt::mean(
+    //     outer_stack(DY, m_aCached_X), {0}
+    // );
 
     if (m_bUse_Bias)
         m_aGrad_b = xt::sum(DY, {0});
