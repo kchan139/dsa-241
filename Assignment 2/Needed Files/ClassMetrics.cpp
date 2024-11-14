@@ -27,7 +27,8 @@ ClassMetrics::~ClassMetrics() {}
 
 void ClassMetrics::reset_metrics() {
     //YOUR CODE IS HERE
-    m_metrics = xt::zeros<double>({NUM_CLASS_METRICS});
+    m_sample_counter = 0;
+    m_metrics        = xt::zeros<double>({NUM_CLASS_METRICS});
 }
 
 double_tensor ClassMetrics::calculate_metrics(double_tensor y_true, double_tensor y_pred) {
