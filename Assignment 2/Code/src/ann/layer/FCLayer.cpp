@@ -163,8 +163,7 @@ xt::xarray<double> FCLayer::backward(xt::xarray<double> DY) {
     m_aGrad_W = xt::linalg::dot(xt::transpose(DY), m_aCached_X);
 
     // m_aGrad_W = xt::mean(
-    //     outer_stack(DY, m_aCached_X),
-    //     {0}
+    //     outer_stack(DY, m_aCached_X), {0}
     // );
 
     if (m_bUse_Bias)
