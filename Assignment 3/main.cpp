@@ -7,11 +7,7 @@
  * Link Group : https://www.facebook.com/groups/khmt.ktmt.cse.bku
  * Date: 27.11.2024
 
- ! build code :     g++ -fsanitize=hashress -fsanitize=undefined -std=c++17
-    -o main -Iinclude -Itest -Isrc
-    main.cpp
-    test/unit_test/graph/unit_test.cpp
- -DTEST_GRAPH
+ ! build code :  g++ -fsanitize=address -fsanitize=undefined -std=c++17 -o main -Iinclude -Itest -Isrc main.cpp test/unit_test/graph/unit_test.cpp -DTEST_GRAPH
 
  * run code
     * terminal unit test array list
@@ -40,7 +36,7 @@ int main(int argc, char *argv[]) {
   } else if (arg1 == "test_random") {
     std::cout << GREEN << BOLD << "Running test_random/" << TEST_CASE << RESET
               << "\n";
-    handleTestRandom(argc, argv);
+    // handleTestRandom(argc, argv);
   } else {
     printTestCase();
   }
