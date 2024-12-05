@@ -42,10 +42,32 @@ public:
 
         if (!fromNode)
             throw VertexNotFoundException(string(1, from));
+
         if (!toNode)
             throw VertexNotFoundException(string(1, to));
 
-        fromNode->connect(toNode, weight);
+        if (fromNode == toNode) 
+        {
+            // Handle self-loop
+            if (!fromNode->getEdge(toNode))
+                fromNode->connect(toNode, weight);
+            else
+                fromNode->getEdge(toNode)->setWeight(weight);
+        } 
+        else 
+        {
+            // Check and add edge from 'fromNode' to 'toNode'
+            if (!fromNode->getEdge(toNode))
+                fromNode->connect(toNode, weight);
+            else
+                fromNode->getEdge(toNode)->setWeight(weight);
+
+            // Check and add edge from 'toNode' to 'fromNode'
+            if (!toNode->getEdge(fromNode))
+                toNode->connect(fromNode, weight);
+            else
+                toNode->getEdge(fromNode)->setWeight(weight);
+        }
     }
     void disconnect(T from, T to)
     {

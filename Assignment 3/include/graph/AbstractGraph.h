@@ -283,6 +283,20 @@ public:
             //TODO
             return outDegree_;
         }
+
+        void addInDegree(){
+            inDegree_++;
+        }
+        void addOutDegree(){
+            outDegree_++;
+        }
+        void subInDegree(){
+            inDegree_--;
+        }
+        void subOutDegree(){
+            outDegree_--;
+        }
+        
         string toString(){
             stringstream os;
             os << "V("

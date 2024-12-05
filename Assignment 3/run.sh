@@ -5,4 +5,5 @@ if [ $? -eq 0 ]; then
     clear
     ./main test_unit graph01
     ./main test_unit graph02
+    ./main test_unit graph03
 fi
