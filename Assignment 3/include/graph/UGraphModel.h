@@ -37,14 +37,19 @@ public:
     void connect(T from, T to, float weight = 0)
     {
         // TODO
+        AbstractGraph<T>::connect(from, to, weight);
+        AbstractGraph<T>::connect(to, from, weight);
     }
     void disconnect(T from, T to)
     {
         // TODO
+        AbstractGraph<T>::disconnect(from, to);
+        AbstractGraph<T>::disconnect(to, from);
     }
     void remove(T vertex)
     {
         // TODO
+        AbstractGraph<T>::remove(vertex);
     }
     static UGraphModel<T> *create(
         T *vertices, int nvertices, Edge<T> *edges, int nedges,
@@ -52,6 +57,14 @@ public:
         string (*vertex2str)(T &))
     {
         // TODO
+        UGraphModel<T>* graph = new UGraphModel<T>(vertexEQ, vertex2str);
+        for (int i = 0; i < nvertices; i++) {
+            graph->add(vertices[i]);
+        }
+        for (int i = 0; i < nedges; i++) {
+            graph->connect(edges[i].from, edges[i].to, edges[i].weight);
+        }
+        return graph;
     }
 };
 

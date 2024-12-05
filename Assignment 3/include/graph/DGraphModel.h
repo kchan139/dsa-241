@@ -33,12 +33,15 @@ public:
     
     void connect(T from, T to, float weight=0){
         //TODO
+        AbstractGraph<T>::connect(from, to, weight);
     }
     void disconnect(T from, T to){
         //TODO
+        AbstractGraph<T>::disconnect(from, to);
     }
     void remove(T vertex){
         //TODO
+        AbstractGraph<T>::remove(vertex);
     }
     
     static DGraphModel<T>* create(
@@ -46,6 +49,14 @@ public:
             bool (*vertexEQ)(T&, T&),
             string (*vertex2str)(T&)){
         //TODO
+        DGraphModel<T>* graph = new DGraphModel<T>(vertexEQ, vertex2str);
+        for (int i = 0; i < nvertices; i++) {
+            graph->add(vertices[i]);
+        }
+        for (int i = 0; i < nedges; i++) {
+            graph->connect(edges[i].from, edges[i].to, edges[i].weight);
+        }
+        return graph;
     }
 };
 
