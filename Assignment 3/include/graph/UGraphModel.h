@@ -28,61 +28,70 @@ public:
     // class UGraphAlgorithm;
     // friend class UGraphAlgorithm;
 
-    UGraphModel(
-        bool (*vertexEQ)(T &, T &),
-        string (*vertex2str)(T &)) : AbstractGraph<T>(vertexEQ, vertex2str)
-    {
-    }
+    UGraphModel( bool (*vertexEQ)(T &, T &), string (*vertex2str)(T &))
+         : AbstractGraph<T>(vertexEQ, vertex2str) {}
 
     void connect(T from, T to, float weight = 0)
     {
         // TODO
-        typename AbstractGraph<T>::VertexNode* fromNode = this->getVertexNode(from);
-        typename AbstractGraph<T>::VertexNode* toNode = this->getVertexNode(to);
+        typename AbstractGraph<T>::VertexNode *fromNode = this->getVertexNode(from);
+        typename AbstractGraph<T>::VertexNode *toNode   = this->getVertexNode(to);
 
-        if (!fromNode)
-            throw VertexNotFoundException(string(1, from));
+        if (!fromNode) throw VertexNotFoundException("");
+        if (!toNode)   throw VertexNotFoundException("");
 
-        if (!toNode)
-            throw VertexNotFoundException(string(1, to));
-
-        if (fromNode == toNode) 
-        {
-            // Handle self-loop
-            if (!fromNode->getEdge(toNode))
-                fromNode->connect(toNode, weight);
-            else
-                fromNode->getEdge(toNode)->setWeight(weight);
-        } 
-        else 
-        {
-            // Check and add edge from 'fromNode' to 'toNode'
-            if (!fromNode->getEdge(toNode))
-                fromNode->connect(toNode, weight);
-            else
-                fromNode->getEdge(toNode)->setWeight(weight);
-
-            // Check and add edge from 'toNode' to 'fromNode'
-            if (!toNode->getEdge(fromNode))
-                toNode->connect(fromNode, weight);
-            else
-                toNode->getEdge(fromNode)->setWeight(weight);
-        }
+        fromNode->connect(toNode, weight);
+        toNode->connect(fromNode, weight);
     }
+
     void disconnect(T from, T to)
     {
         // TODO
+        typename AbstractGraph<T>::VertexNode *fromNode = this->getVertexNode(from);
+        typename AbstractGraph<T>::VertexNode *toNode   = this->getVertexNode(to);
+        typename AbstractGraph<T>::Edge *disconnectEdge = fromNode->getEdge(toNode);
+        
+        if (!fromNode)       throw VertexNotFoundException("");
+        if (!toNode)         throw VertexNotFoundException("");
+        if (!disconnectEdge) throw EdgeNotFoundException("");
+
+        fromNode->removeTo(toNode);
+        toNode->removeTo(fromNode);
     }
+
     void remove(T vertex)
     {
         // TODO
+        typename AbstractGraph<T>::VertexNode *removeNode = this->getVertexNode(vertex);
+        if (!removeNode)
+            throw VertexNotFoundException("");
+
+        DLinkedList<T> outEdges = this->getOutwardEdges(vertex);
+        for (auto adjnode : outEdges)
+        {
+            typename AbstractGraph<T>::VertexNode *adjNode = this->getVertexNode(adjnode);
+            removeNode->removeTo(adjNode);
+            adjNode->removeTo(removeNode);
+        }
+
+        AbstractGraph<T>::nodeList.removeItem(removeNode);
     }
+
     static UGraphModel<T> *create(
         T *vertices, int nvertices, Edge<T> *edges, int nedges,
         bool (*vertexEQ)(T &, T &),
         string (*vertex2str)(T &))
     {
         // TODO
+        UGraphModel<T> *model = new UGraphModel<T>(vertexEQ, vertex2str);
+
+        for (int i = 0; i < nvertices; i++)
+            model->add(vertices[i]);
+
+        for (int i = 0; i < nedges; i++)
+            model->connect(edges[i].from, edges[i].to, edges[i].weight);
+
+        return model;
     }
 };
 
