@@ -68,7 +68,10 @@ public:
         this->vertexEQ   = vertexEQ;
         this->vertex2str = vertex2str;
     }
-    virtual ~AbstractGraph(){}
+
+    virtual ~AbstractGraph() {
+        clear();
+    }
     
     typedef bool (*vertexEQFunc)(T&, T&);
     typedef string (*vertex2strFunc)(T&);
@@ -159,8 +162,8 @@ public:
 
     virtual void clear(){
         //TODO
-        for (auto &currNode : nodeList)
-            currNode->adList.clear();
+        for (VertexNode* node : nodeList)
+            delete node;
         nodeList.clear();
     }
 
@@ -275,6 +278,7 @@ public:
         
     public:
         VertexNode():adList(&DLinkedList<Edge*>::free, &Edge::edgeEQ){}
+
         VertexNode(T vertex, bool (*vertexEQ)(T&, T&), string (*vertex2str)(T&))
             :adList(&DLinkedList<Edge*>::free, &Edge::edgeEQ){
             this->vertex     = vertex;
@@ -282,6 +286,7 @@ public:
             this->vertex2str = vertex2str;
             this->outDegree_ = this->inDegree_ = 0;
         }
+
         T& getVertex(){
             return vertex;
         }

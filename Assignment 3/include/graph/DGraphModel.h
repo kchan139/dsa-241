@@ -73,7 +73,7 @@ public:
             adjNode->removeTo(removeNode);
         }
 
-        AbstractGraph<T>::nodeList.removeItem(removeNode);
+        // AbstractGraph<T>::nodeList.removeItem(removeNode);
     }
     
     static DGraphModel<T>* create(
