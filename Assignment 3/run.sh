@@ -3,7 +3,5 @@ g++ -fsanitize=address -fsanitize=undefined -std=c++17 -o main -Iinclude -Itest 
 
 if [ $? -eq 0 ]; then
     clear
-    ./main test_unit graph01
-    ./main test_unit graph02
-    ./main test_unit graph03
+    ./main test_unit
 fi

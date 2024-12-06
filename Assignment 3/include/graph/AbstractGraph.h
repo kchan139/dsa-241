@@ -131,7 +131,7 @@ public:
         return fromNode->getOutwardEdges();
     }
     
-    virtual DLinkedList<T>  getinEdges(T to){
+    virtual DLinkedList<T>  getInwardEdges(T to){
         //TODO
         VertexNode *toNode = this->getVertexNode(to);
         if (!toNode)
