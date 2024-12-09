@@ -21,15 +21,45 @@
 #include "stacknqueue/Stack.h"
 template <class T, class V>
 using XHashMap = xMap<T, V>;
-/*
- ! build code graph :   g++ -fsanitize=address -fsanitize=undefined -std=c++17
- -o main -Iinclude -Itest main.cpp test/unit_test/sort_topo/unit_test.cpp
- test/unit_test/sort_topo/test/*.cpp  -DTEST_SORT_TOPO
 
-  ! build code topo : g++ -fsanitize=address -fsanitize=undefined -std=c++17 -o
- main -Iinclude -Itest main.cpp
- test/unit_test/graph/unit_test.cpptest/unit_test/graph/test/*.cpp  -DTEST_GRAPH
- */
-// TODO
+template<class T>
+class TopoSorter{
+public:
+    static int DFS;
+    static int BFS; 
+    
+protected:
+    DGraphModel<T>* graph;
+    int (*hash_code)(T&, int);
+    
+public:
+    TopoSorter(DGraphModel<T>* graph, int (*hash_code)(T&, int)=0){
+        //TODO
+    }   
+    DLinkedList<T> sort(int mode=0, bool sorted=true){
+        //TODO
+    }
+    DLinkedList<T> bfsSort(bool sorted=true){ 
+        //TODO
+    }
+
+    DLinkedList<T> dfsSort(bool sorted=true){
+        //TODO
+    }
+
+protected:
+
+    //Helper functions
+    XHashMap<T, int> vertex2inDegree(int (*hash)(T&, int));
+    XHashMap<T, int> vertex2outDegree(int (*hash)(T&, int));
+    DLinkedList<T> listOfZeroInDegrees();
+
+}; //TopoSorter
+template<class T>
+int TopoSorter<T>::DFS = 0;
+template<class T>
+int TopoSorter<T>::BFS = 1;
+
+/////////////////////////////End of TopoSorter//////////////////////////////////
 
 #endif /* TOPOSORTER_H */

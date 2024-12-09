@@ -15,15 +15,36 @@
 #define DLINKEDLISTSE_H
 #include "list/DLinkedList.h"
 #include "sorting/ISort.h"
-/*
- ! build code graph :   g++ -fsanitize=address -fsanitize=undefined -std=c++17
- -o main -Iinclude -Itest main.cpp test/unit_test/sort_topo/unit_test.cpp
- test/unit_test/sort_topo/test/*.cpp  -DTEST_SORT_TOPO
 
-  ! build code topo : g++ -fsanitize=address -fsanitize=undefined -std=c++17 -o
- main -Iinclude -Itest main.cpp
- test/unit_test/graph/unit_test.cpptest/unit_test/graph/test/*.cpp  -DTEST_GRAPH
- */
-// TODO
+template<class T>
+class DLinkedListSE: public DLinkedList<T>{
+public:
+    
+    DLinkedListSE(
+            void (*removeData)(DLinkedList<T>*)=0, 
+            bool (*itemEQ)(T&, T&)=0 ) : 
+            DLinkedList<T>(removeData, itemEQ){
+        
+    };
+    
+    DLinkedListSE(const DLinkedList<T>& list){
+        this->copyFrom(list);
+    }
+    
+    void sort(int (*comparator)(T&,T&)=0){
+        //TODO: implement this function
+        //     - You should implement the merge sort algorithm
+    };
+    
+protected:
+    static int compare(T& lhs, T& rhs, int (*comparator)(T&,T&)=0){
+        if(comparator != 0) return comparator(lhs, rhs);
+        else{
+            if(lhs < rhs) return -1;
+            else if(lhs > rhs) return +1;
+            else return 0;
+        }
+    }
+};
 
 #endif /* DLINKEDLISTSE_H */
