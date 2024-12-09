@@ -44,18 +44,18 @@ public:
     T pop(){
         //TODO: remove and return the top item
         // return T{}; //Placeholder
-        if (empty()) {
+        if (empty())
             throw Underflow("Stack is empty");
-        }
+        
         return list.removeAt(list.size() - 1);
     }
 
     T& peek(){
         //TODO: return the top item
         // return T{}; //Placeholder
-        if (empty()) {
+        if (empty())
             throw Underflow("Stack is empty");
-        }
+
         return list.get(list.size() - 1);
     }    
 
@@ -78,7 +78,7 @@ public:
     bool remove(T item){
         //TODO: remove the first occurrence of the item
         //     return true if the item is removed successfully
-        return list.removeItem(item, deleteUserData);
+        return list.removeItem(item);
     }
     
     bool contains(T item){

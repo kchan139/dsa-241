@@ -38,6 +38,7 @@ public:
 
         T* array = new T[this->count];
         int index = 0;
+        
         for (typename DLinkedList<T>::Iterator it = this->begin(); it != this->end(); ++it)
             array[index++] = *it;
 
