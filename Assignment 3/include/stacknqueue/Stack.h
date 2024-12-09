@@ -38,6 +38,7 @@ public:
 
     void push(T item){
         //TODO: add item to the top
+        list.add(0, item);
     }
 
     T pop(){
@@ -90,7 +91,7 @@ public:
         os << "FROM TOP: " << list.toString(item2str);
         return os.str();
     }
-    
+
     void println(string (*item2str)(T&)=0 ){
         cout << toString(item2str) << endl;
     }
