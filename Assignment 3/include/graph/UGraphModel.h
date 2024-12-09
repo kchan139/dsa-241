@@ -74,7 +74,12 @@ public:
             adjNode->removeTo(removeNode);
         }
 
-        AbstractGraph<T>::nodeList.removeItem(removeNode);
+        AbstractGraph<T>::nodeList.removeItem(
+            removeVertex, 
+            [](typename AbstractGraph<T>::VertexNode *delVertex) { 
+                delete delVertex; 
+            }
+        );
     }
 
     static UGraphModel<T> *create(
