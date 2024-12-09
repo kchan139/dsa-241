@@ -80,9 +80,9 @@ public:
         //TODO: remove the item from the queue
         //     return true if the item is removed successfully
         // return false;
-        return list.remove(item);
+        return list.removeAt(indexOf(item));
     }
-    
+
     bool contains(T item){
         //TODO: check if the item is in the queue
         return list.contains(item);

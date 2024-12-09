@@ -35,42 +35,62 @@ public:
         this->itemEqual = itemEqual;
         this->deleteUserData = deleteUserData;
     }
+
     void push(T item){
         //TODO: add item to the top
     }
+
     T pop(){
         //TODO: remove and return the top item
-        return T{}; //Placeholder
+        // return T{}; //Placeholder
+        if (list.size() == 0) {
+            throw Underflow("Stack is empty");
+        }
+        return list.removeAt(list.size() - 1);
     }
+
     T& peek(){
         //TODO: return the top item
-        return T{}; //Placeholder
+        // return T{}; //Placeholder
+        if (list.size() == 0) {
+            throw Underflow("Stack is empty");
+        }
+        return list.get(list.size() - 1);
     }    
+
     bool empty(){
         //TODO: check if the stack is empty
-        return false;
+        // return false;
+        return list.size() == 0;
     }
+
     int size(){
         //TODO: return the number of items in the stack
-        return 0;
+        return list.size();
     }
+
     void clear(){
         //TODO: remove all items in the stack
+        list.clear();
     }
+    
     bool remove(T item){
         //TODO: remove the first occurrence of the item
         //     return true if the item is removed successfully
-        return false;
+        return list.removeAt(indexOf(item));
     }
+    
     bool contains(T item){
         //TODO: check if the item is in the stack
-        return false;
+        return list.contains(item);
     }
+
     string  toString(string (*item2str)(T&)=0 ){
         stringstream os;
         os << "FROM TOP: " << list.toString(item2str);
         return os.str();
     }
+    
     void println(string (*item2str)(T&)=0 ){
         cout << toString(item2str) << endl;
     }
