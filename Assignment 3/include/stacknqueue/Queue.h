@@ -34,37 +34,60 @@ public:
         this->itemEqual = itemEqual;
         this->deleteUserData = deleteUserData;
     }
+
     void push(T item){
         //TODO: add item to the rear
+        list.add(item);
     }
+
     T pop(){
         //TODO: remove and return the front item
-        return T{}; //Placeholder
+        // return T{}; //Placeholder
+        if (list.size() == 0)
+            throw Underflow("Queue is empty");
+
+        T frontItem = list.get(0);  // Get the item at the front
+        list.removeAt(0);           // Remove the item at the front
+        return frontItem;
     }
+
     T& peek(){
         //TODO: return the front item
-        return T{}; //Placeholder
+        // return T{}; //Placeholder
+        if (list.size() == 0) {
+            throw Underflow("Queue is empty");
+        }
+        return list.get(0);
     }
+
     bool empty(){
         //TODO: check if the queue is empty
-        return false;
+        // return false;
+        return list.size() == 0;
     }
+
     int size(){
         //TODO: return the number of items in the queue
-        return 0;       
+        return list.size();       
     }
+
     void clear(){
         //TODO: remove all items in the queue
+        list.clear();
     }
+
     bool remove(T item){
         //TODO: remove the item from the queue
         //     return true if the item is removed successfully
-        return false;
+        // return false;
+        return list.remove(item);
     }
+    
     bool contains(T item){
         //TODO: check if the item is in the queue
-        return false;
+        return list.contains(item);
     }
+
     string  toString(string (*item2str)(T&)=0 ){
         stringstream os;
         os << "FRONT-TO-REAR: " << list.toString(item2str);
