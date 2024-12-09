@@ -74,7 +74,7 @@ public:
         }
 
         AbstractGraph<T>::nodeList.removeItem(
-            removeVertex, 
+            removeNode, 
             [](typename AbstractGraph<T>::VertexNode *delVertex) { 
                 delete delVertex; 
             }

@@ -331,7 +331,12 @@ public:
         void removeTo(VertexNode* to){
             //TODO
             Edge *removeEdge = this->getEdge(to);
-            adList.removeItem(removeEdge);
+            adList.removeItem(
+                removeEdge, 
+                [](Edge * deleteEdge) {
+                    delete deleteEdge;
+                }
+            );
 
             outDegree_--;
             to->inDegree_--;
