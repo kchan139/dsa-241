@@ -43,7 +43,7 @@ public:
     T pop(){
         //TODO: remove and return the front item
         // return T{}; //Placeholder
-        if (list.size() == 0)
+        if (lempty())
             throw Underflow("Queue is empty");
 
         T frontItem = list.get(0);  // Get the item at the front
@@ -54,7 +54,7 @@ public:
     T& peek(){
         //TODO: return the front item
         // return T{}; //Placeholder
-        if (list.size() == 0) {
+        if (empty()) {
             throw Underflow("Queue is empty");
         }
         return list.get(0);
@@ -80,7 +80,7 @@ public:
         //TODO: remove the item from the queue
         //     return true if the item is removed successfully
         // return false;
-        return list.removeAt(indexOf(item));
+        return list.removeItem(item, deleteUserData);
     }
 
     bool contains(T item){
