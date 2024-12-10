@@ -25,11 +25,12 @@ public:
     {
         this->desc = desc;
     }
-    const char *what() const throw()
-    {
-        stringstream os;
+    const char* what() const noexcept override {
+        static std::string message;
+        std::stringstream os;
         os << "Underflow: " << this->desc;
-        return os.str().c_str();
+        message = os.str();
+        return message.c_str();
     }
 };
 

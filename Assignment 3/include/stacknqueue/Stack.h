@@ -44,19 +44,19 @@ public:
     T pop(){
         //TODO: remove and return the top item
         // return T{}; //Placeholder
-        if (empty())
+        if (this->empty())
             throw Underflow("Stack is empty");
         
-        return list.removeAt(list.size() - 1);
+        return list.removeAt(0);
     }
 
     T& peek(){
         //TODO: return the top item
         // return T{}; //Placeholder
-        if (empty())
+        if (this->empty())
             throw Underflow("Stack is empty");
 
-        return list.get(list.size() - 1);
+        return list.get(0);
     }    
 
     bool empty(){
