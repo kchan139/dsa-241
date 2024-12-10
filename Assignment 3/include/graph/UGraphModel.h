@@ -49,14 +49,14 @@ public:
         // TODO
         typename AbstractGraph<T>::VertexNode *fromNode = this->getVertexNode(from);
         typename AbstractGraph<T>::VertexNode *toNode   = this->getVertexNode(to);
+
         if (!fromNode)       throw VertexNotFoundException(this->vertex2str(from));
         if (!toNode)         throw VertexNotFoundException(this->vertex2str(to));
 
         typename AbstractGraph<T>::Edge *disconnectEdge = fromNode->getEdge(toNode);
-        if (!disconnectEdge)
-        {
-            typename AbstractGraph<T>::Edge throwEdge(fromNode, toNode);
-            throw EdgeNotFoundException(AbstractGraph<T>::edge2Str(throwEdge));
+        if (!disconnectEdge) {
+            typename AbstractGraph<T>::Edge edgeThrown(fromNode, toNode);
+            throw EdgeNotFoundException(AbstractGraph<T>::edge2Str(edgeThrown));
         }
 
         fromNode->removeTo(toNode);
@@ -67,12 +67,10 @@ public:
     {
         // TODO
         typename AbstractGraph<T>::VertexNode *removeNode = this->getVertexNode(vertex);
-        if (!removeNode)
-            throw VertexNotFoundException(this->vertex2str(vertex));
+        if (!removeNode) throw VertexNotFoundException(this->vertex2str(vertex));
 
         DLinkedList<T> outEdges = this->getOutwardEdges(vertex);
-        for (auto adjnode : outEdges)
-        {
+        for (auto adjnode : outEdges) {
             typename AbstractGraph<T>::VertexNode *adjNode = this->getVertexNode(adjnode);
             removeNode->removeTo(adjNode);
             adjNode->removeTo(removeNode);
@@ -86,11 +84,13 @@ public:
         );
     }
 
-    static UGraphModel<T> *create(
-        T *vertices, int nvertices, Edge<T> *edges, int nedges,
+    static UGraphModel<T> *create (
+        T *vertices, 
+        int nvertices, 
+        Edge<T> *edges, 
+        int nedges,
         bool (*vertexEQ)(T &, T &),
-        string (*vertex2str)(T &))
-    {
+        string (*vertex2str)(T &)) {
         // TODO
         UGraphModel<T> *model = new UGraphModel<T>(vertexEQ, vertex2str);
 

@@ -44,14 +44,14 @@ public:
         //TODO
         typename AbstractGraph<T>::VertexNode *fromNode = this->getVertexNode(from);
         typename AbstractGraph<T>::VertexNode *toNode   = this->getVertexNode(to);
-        if (!fromNode)       throw VertexNotFoundException(this->vertex2str(from));
-        if (!toNode)         throw VertexNotFoundException(this->vertex2str(to));
+
+        if (!fromNode) throw VertexNotFoundException(this->vertex2str(from));
+        if (!toNode)   throw VertexNotFoundException(this->vertex2str(to));
 
         typename AbstractGraph<T>::Edge *disconnectEdge = fromNode->getEdge(toNode);
-        if (!disconnectEdge)
-        {
-            typename AbstractGraph<T>::Edge throwEdge(fromNode, toNode);
-            throw EdgeNotFoundException(AbstractGraph<T>::edge2Str(throwEdge));
+        if (!disconnectEdge) {
+            typename AbstractGraph<T>::Edge edgeThrown(fromNode, toNode);
+            throw EdgeNotFoundException(AbstractGraph<T>::edge2Str(edgeThrown));
         }
 
         fromNode->removeTo(toNode);
@@ -65,14 +65,12 @@ public:
         DLinkedList<T> outEdges = this->getOutwardEdges(vertex);
         DLinkedList<T> inEdges  = this->getInwardEdges(vertex);
 
-        for (auto adjnode : outEdges)
-        {
+        for (auto adjnode : outEdges) {
             typename AbstractGraph<T>::VertexNode *adjNode = this->getVertexNode(adjnode);
             removeNode->removeTo(adjNode);
         }
 
-        for (auto adjnode : inEdges)
-        {
+        for (auto adjnode : inEdges) {
             typename AbstractGraph<T>::VertexNode *adjNode = this->getVertexNode(adjnode);
             adjNode->removeTo(removeNode);
         }
@@ -86,9 +84,12 @@ public:
     }
     
     static DGraphModel<T>* create(
-            T* vertices, int nvertices, Edge<T>* edges, int nedges,
+            T* vertices, 
+            int nvertices, 
+            Edge<T>* edges, 
+            int nedges,
             bool (*vertexEQ)(T&, T&),
-            string (*vertex2str)(T&)){
+            string (*vertex2str)(T&)) {
         //TODO
         DGraphModel<T> *model = new DGraphModel<T>(vertexEQ, vertex2str);
 
