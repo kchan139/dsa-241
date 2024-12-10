@@ -35,8 +35,8 @@ public:
         typename AbstractGraph<T>::VertexNode *fromNode = this->getVertexNode(from);
         typename AbstractGraph<T>::VertexNode *toNode   = this->getVertexNode(to);
 
-        if (!fromNode) throw VertexNotFoundException("none");
-        if (!toNode)   throw VertexNotFoundException("none");
+        if (!fromNode) throw VertexNotFoundException(this->vertex2str(from));
+        if (!toNode)   throw VertexNotFoundException(this->vertex2str(to));
 
         fromNode->connect(toNode, weight);
     }
@@ -44,11 +44,15 @@ public:
         //TODO
         typename AbstractGraph<T>::VertexNode *fromNode = this->getVertexNode(from);
         typename AbstractGraph<T>::VertexNode *toNode   = this->getVertexNode(to);
-        typename AbstractGraph<T>::Edge *disconnectEdge = fromNode->getEdge(toNode);
+        if (!fromNode)       throw VertexNotFoundException(this->vertex2str(from));
+        if (!toNode)         throw VertexNotFoundException(this->vertex2str(to));
 
-        if (!fromNode)       throw VertexNotFoundException("");
-        if (!toNode)         throw VertexNotFoundException("");
-        if (!disconnectEdge) throw EdgeNotFoundException("");
+        typename AbstractGraph<T>::Edge *disconnectEdge = fromNode->getEdge(toNode);
+        if (!disconnectEdge)
+        {
+            typename AbstractGraph<T>::Edge throwEdge(fromNode, toNode);
+            throw EdgeNotFoundException(AbstractGraph<T>::edge2Str(throwEdge));
+        }
 
         fromNode->removeTo(toNode);
     }
@@ -56,7 +60,7 @@ public:
         //TODO
         typename AbstractGraph<T>::VertexNode *removeNode = this->getVertexNode(vertex);
         if (!removeNode)
-            throw VertexNotFoundException("");
+            throw VertexNotFoundException(this->vertex2str(vertex));
 
         DLinkedList<T> outEdges = this->getOutwardEdges(vertex);
         DLinkedList<T> inEdges  = this->getInwardEdges(vertex);

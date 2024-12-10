@@ -105,9 +105,11 @@ public:
             VertexNode *currNode = getVertexNode(vertex);
             currNode->vertex     = vertex;
         }
-
-        VertexNode *newNode = new VertexNode(vertex, vertexEQ, vertex2str);
-        nodeList.add(newNode);
+        else
+        {
+            VertexNode *newNode = new VertexNode(vertex, vertexEQ, vertex2str);
+            nodeList.add(newNode);
+        }
     }
     virtual bool contains(T vertex){
         //TODO
@@ -116,20 +118,21 @@ public:
     virtual float weight(T from, T to){
         //TODO
         VertexNode *fromNode = getVertexNode(from);
-        if (!fromNode) throw VertexNotFoundException("");
+        if (!fromNode) throw VertexNotFoundException(vertex2str(from));
 
         VertexNode *toNode = getVertexNode(to);
-        if (!toNode) throw VertexNotFoundException("");
+        if (!toNode) throw VertexNotFoundException(vertex2str(to));
 
         Edge *edge = fromNode->getEdge(toNode);
         if (edge) return edge->weight;
 
-        throw EdgeNotFoundException("");
+        typename AbstractGraph<T>::Edge throwEdge(fromNode, toNode);
+        throw EdgeNotFoundException(AbstractGraph<T>::edge2Str(throwEdge));
     }
     virtual DLinkedList<T> getOutwardEdges(T from){
         //TODO
         VertexNode *fromNode = getVertexNode(from);
-        if (!fromNode) throw VertexNotFoundException("");
+        if (!fromNode) throw VertexNotFoundException(vertex2str(from));
 
         return fromNode->getOutwardEdges();
     }
@@ -138,7 +141,7 @@ public:
         //TODO
         VertexNode *toNode = this->getVertexNode(to);
         if (!toNode)
-            throw VertexNotFoundException("");
+            throw VertexNotFoundException(vertex2str(to));
 
         DLinkedList<T> inEdges;
 
@@ -170,7 +173,7 @@ public:
     virtual int inDegree(T vertex){
         //TODO
         VertexNode *currNode = this->getVertexNode(vertex);
-        if (!currNode) throw VertexNotFoundException("");
+        if (!currNode) throw VertexNotFoundException(vertex2str(vertex));
 
         return currNode->inDegree();
     }
@@ -178,7 +181,7 @@ public:
     virtual int outDegree(T vertex){
         //TODO
         VertexNode *currNode = this->getVertexNode(vertex);
-        if (!currNode) throw VertexNotFoundException("");
+        if (!currNode) throw VertexNotFoundException(vertex2str(vertex));
 
         return currNode->outDegree();
     }
@@ -196,11 +199,11 @@ public:
         //TODO
         VertexNode *fromNode = getVertexNode(from);
         if (!fromNode)
-            throw VertexNotFoundException("none");
+            throw VertexNotFoundException(vertex2str(from));
 
         VertexNode *toNode = getVertexNode(to);
         if (!toNode)
-            throw VertexNotFoundException("none");
+            throw VertexNotFoundException(vertex2str(to));
 
         return fromNode->getEdge(toNode) && toNode->getEdge(fromNode);
     }
