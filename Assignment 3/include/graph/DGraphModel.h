@@ -23,6 +23,9 @@
 template<class T>
 class DGraphModel: public AbstractGraph<T>{
 private:
+    using VertexNode = typename AbstractGraph<T>::VertexNode;
+    // using Edge = typename AbstractGraph<T>::Edge;
+
 public:
     DGraphModel(
             bool (*vertexEQ)(T&, T&), 
@@ -32,8 +35,8 @@ public:
     
     void connect(T from, T to, float weight=0){
         //TODO
-        typename AbstractGraph<T>::VertexNode *fromNode = this->getVertexNode(from);
-        typename AbstractGraph<T>::VertexNode *toNode   = this->getVertexNode(to);
+        VertexNode *fromNode = this->getVertexNode(from);
+        VertexNode *toNode   = this->getVertexNode(to);
 
         if (!fromNode) throw VertexNotFoundException(this->vertex2str(from));
         if (!toNode)   throw VertexNotFoundException(this->vertex2str(to));
@@ -42,8 +45,8 @@ public:
     }
     void disconnect(T from, T to){
         //TODO
-        typename AbstractGraph<T>::VertexNode *fromNode = this->getVertexNode(from);
-        typename AbstractGraph<T>::VertexNode *toNode   = this->getVertexNode(to);
+        VertexNode *fromNode = this->getVertexNode(from);
+        VertexNode *toNode   = this->getVertexNode(to);
 
         if (!fromNode) throw VertexNotFoundException(this->vertex2str(from));
         if (!toNode)   throw VertexNotFoundException(this->vertex2str(to));
@@ -58,7 +61,7 @@ public:
     }
     void remove(T vertex){
         //TODO
-        typename AbstractGraph<T>::VertexNode *removeNode = this->getVertexNode(vertex);
+        VertexNode *removeNode = this->getVertexNode(vertex);
         if (!removeNode)
             throw VertexNotFoundException(this->vertex2str(vertex));
 
@@ -66,19 +69,19 @@ public:
         DLinkedList<T> inEdges  = this->getInwardEdges(vertex);
 
         for (auto adjnode : outEdges) {
-            typename AbstractGraph<T>::VertexNode *adjNode = this->getVertexNode(adjnode);
+            VertexNode *adjNode = this->getVertexNode(adjnode);
             removeNode->removeTo(adjNode);
         }
 
         for (auto adjnode : inEdges) {
-            typename AbstractGraph<T>::VertexNode *adjNode = this->getVertexNode(adjnode);
+            VertexNode *adjNode = this->getVertexNode(adjnode);
             adjNode->removeTo(removeNode);
         }
 
         AbstractGraph<T>::nodeList.removeItem(
             removeNode, 
-            [](typename AbstractGraph<T>::VertexNode *delVertex) { 
-                delete delVertex; 
+            [](VertexNode * rmVertex) { 
+                delete rmVertex; 
             }
         );
     }

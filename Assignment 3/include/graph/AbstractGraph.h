@@ -27,6 +27,7 @@ public:
     class Edge; //forward declaration
     class VertexNode; //forward declaration
     class Iterator; //forward declaration
+    using Edge = typename AbstractGraph<T>::Edge;
     
 private:
 protected:
@@ -127,7 +128,7 @@ public:
         if (edge) return edge->weight;
 
         // if !edge
-        typename AbstractGraph<T>::Edge edgeThrown(fromNode, toNode);
+        Edge edgeThrown(fromNode, toNode);
         throw EdgeNotFoundException(AbstractGraph<T>::edge2Str(edgeThrown));
     }
 
