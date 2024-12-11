@@ -94,7 +94,7 @@ public:
         return result;
     }
 
-    void dfsVisit(T vertex, xMap<T, bool>& visited, Stack<T>& stack) {
+    void dfsVisit(T &vertex, xMap<T, bool>& visited, Stack<T>& stack) {
         visited.put(vertex, true);
 
         for (auto neighbor : graph->getOutwardEdges(vertex))
